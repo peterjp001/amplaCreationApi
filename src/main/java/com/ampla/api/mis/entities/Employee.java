@@ -1,10 +1,13 @@
 package com.ampla.api.mis.entities;
 
+import com.ampla.api.security.entities.AppRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.ampla.api.security.entities.AppUser;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Data
@@ -21,6 +24,9 @@ public class Employee {
 
     @Column(name="last_name")
     private String lastName;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<Status> status = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
