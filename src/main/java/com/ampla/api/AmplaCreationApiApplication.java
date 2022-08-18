@@ -31,9 +31,9 @@ public class AmplaCreationApiApplication {
     @Bean
     CommandLineRunner start(AccountService accountService){
         return args -> {
-            Optional<AppUser> appUser = Optional.ofNullable(accountService.getUserByusername("superAdmin"));
-            if(!appUser.isPresent()){
-                accountService.addNewUser(new AppUser(null,"JohnDoe","Admin@123",new ArrayList<>()));
+            Optional<AppUser> appUser = Optional.ofNullable(accountService.getUserByusername("JohnDoe"));
+            if(appUser.isEmpty()){
+                accountService.addNewUser(new AppUser(null,"JohnDoe","Admin@123",new ArrayList<>(), null));
                 System.out.println("super administrator user created");
                 accountService.addNewRole(new AppRole(null, "ADMIN"));
                 accountService.addNewRole(new AppRole(null, "USER"));
@@ -41,6 +41,8 @@ public class AmplaCreationApiApplication {
                 accountService.addRoleToUser("JohnDoe","USER");
                 accountService.addRoleToUser("JohnDoe","ADMIN");
                 System.out.println("super administrator roles assigned to the user");
+            }else{
+                System.out.println("Super Admin Exist");
             }
 //            ADD ROLE TO THE DATABASE
 //            accountService.addNewRole(new AppRole(null, "STANDARD"));

@@ -1,5 +1,6 @@
 package com.ampla.api.security.controller;
 
+import com.ampla.api.mis.dto.RoleUserDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,18 +11,10 @@ import com.ampla.api.security.entities.AppUser;
 import com.ampla.api.security.service.AccountService;
 import lombok.Data;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +35,12 @@ public class AccountRestController {
         return  accountService.listUsers();
     }
 
+    @GetMapping(path="/users/{id}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public Optional<AppUser> appUser(@PathVariable Long id){
+        return  accountService.getUserById(id);
+    }
+
     @PostMapping(path="/users")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public AppUser saveUser(@RequestBody AppUser appUser){
@@ -54,10 +53,17 @@ public class AccountRestController {
         return accountService.addNewRole(appRole);
     }
 
+    @GetMapping(path="/roles")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public List<AppRole> getAllRoles(){
+        return accountService.listRoles();
+    }
+
+
     @PostMapping(path="/addRoleToUser")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public void addRoleToUser(@RequestBody RoleUserForm roleUserForm){
-        accountService.addRoleToUser(roleUserForm.getUsername(), roleUserForm.getRoleName());
+    public void addRoleToUser(@RequestBody RoleUserDTO roleUserDTO){
+        accountService.addRoleToUser(roleUserDTO.getUsername(), roleUserDTO.getRoleName());
     }
 
     @GetMapping(path="/refreshToken")
@@ -105,9 +111,3 @@ public class AccountRestController {
 
 }
 
-@Data
-class RoleUserForm
-{
-    private String username;
-    private String roleName;
-}

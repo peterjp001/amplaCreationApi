@@ -1,5 +1,7 @@
 package com.ampla.api.security.entities;
 
+import com.ampla.api.mis.entities.Employee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +24,10 @@ public class AppUser {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> appRoles = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private Employee employee;
 
 
 }
