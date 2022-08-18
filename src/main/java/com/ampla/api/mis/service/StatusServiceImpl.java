@@ -33,6 +33,7 @@ public class StatusServiceImpl implements StatusService {
         Status status = statusRepository.findByStatusName(statusName);
 
         employee.getStatus().add(status);
+        employeeRepository.save(employee);
     }
 
     @Override
