@@ -5,11 +5,13 @@ import com.ampla.api.mis.repository.EmployeeRepository;
 import com.ampla.api.security.entities.AppUser;
 import com.ampla.api.security.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository emplRepo;
