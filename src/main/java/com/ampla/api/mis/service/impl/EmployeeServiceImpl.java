@@ -1,12 +1,17 @@
-package com.ampla.api.mis.service;
+package com.ampla.api.mis.service.impl;
 
+import com.ampla.api.mis.entities.Course;
 import com.ampla.api.mis.entities.Employee;
+import com.ampla.api.mis.repository.CourseRepository;
 import com.ampla.api.mis.repository.EmployeeRepository;
+import com.ampla.api.mis.service.EmployeeService;
 import com.ampla.api.security.entities.AppUser;
 import com.ampla.api.security.repository.AppUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +19,12 @@ import java.util.Optional;
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeRepository emplRepo;
-    private AppUserRepository userRepository;
+    private final EmployeeRepository emplRepo;
+    private final AppUserRepository userRepository;
 
-    public EmployeeServiceImpl(EmployeeRepository emplRepo, AppUserRepository userRepository) {
+
+
+    public EmployeeServiceImpl(EmployeeRepository emplRepo, AppUserRepository userRepository ) {
         this.emplRepo = emplRepo;
         this.userRepository = userRepository;
     }
@@ -39,6 +46,8 @@ public class EmployeeServiceImpl implements EmployeeService {
              emplRepo.save(e);
         }
     }
+
+
 
     @Override
     public List<Employee> listEmployee() {

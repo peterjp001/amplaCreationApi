@@ -10,6 +10,7 @@ public interface EmployeeService {
 
     void linkEmployeeToUser(Long idUser, Long idEmployer);
 
+
     List<Employee> listEmployee();
 
     Optional<Employee> getEmployeeById(Long id);
