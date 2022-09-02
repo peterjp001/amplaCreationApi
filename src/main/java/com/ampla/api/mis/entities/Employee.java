@@ -32,5 +32,8 @@ public class Employee {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Collection<Course> course = new ArrayList<>();
+
 
 }

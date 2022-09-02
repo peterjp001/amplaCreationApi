@@ -1,9 +1,10 @@
-package com.ampla.api.mis.service;
+package com.ampla.api.mis.service.impl;
 
 import com.ampla.api.mis.entities.Employee;
 import com.ampla.api.mis.entities.Status;
 import com.ampla.api.mis.repository.EmployeeRepository;
 import com.ampla.api.mis.repository.StatusRepository;
+import com.ampla.api.mis.service.StatusService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,6 @@ public class StatusServiceImpl implements StatusService {
         Employee employee = emp.get();
         System.out.println(employee.getFirstName());
         Status status = statusRepository.findByStatusName(statusName);
-
         employee.getStatus().add(status);
         employeeRepository.save(employee);
     }
