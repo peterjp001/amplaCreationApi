@@ -1,17 +1,13 @@
 package com.ampla.api.mis.service.impl;
 
-import com.ampla.api.mis.entities.Course;
 import com.ampla.api.mis.entities.Employee;
-import com.ampla.api.mis.repository.CourseRepository;
 import com.ampla.api.mis.repository.EmployeeRepository;
 import com.ampla.api.mis.service.EmployeeService;
-import com.ampla.api.security.entities.AppUser;
-import com.ampla.api.security.repository.AppUserRepository;
+import com.ampla.api.security.entities.User;
+import com.ampla.api.security.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +16,10 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository emplRepo;
-    private final AppUserRepository userRepository;
+    private final UserRepository userRepository;
 
 
-
-    public EmployeeServiceImpl(EmployeeRepository emplRepo, AppUserRepository userRepository ) {
+    public EmployeeServiceImpl(EmployeeRepository emplRepo, UserRepository userRepository ) {
         this.emplRepo = emplRepo;
         this.userRepository = userRepository;
     }
@@ -36,10 +31,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void linkEmployeeToUser(Long idUser, Long idEmployer) {
-         Optional<AppUser> user = userRepository.findById(idUser);
+         Optional<User> user = userRepository.findById(idUser);
          Optional<Employee> emp = emplRepo.findById(idEmployer);
         if (user.isPresent() && emp.isPresent()) {
-            AppUser u = user.get();
+            User u = user.get();
             Employee e = emp.get();
             e.setUser(u);
             System.out.println(u.getEmployee());
@@ -57,5 +52,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Optional<Employee> getEmployeeById(Long id) {
         return emplRepo.findById(id);
+    }
+
+    @Override
+    public void deleteEmployee(Long id) {
+        emplRepo.deleteById(id);
     }
 }

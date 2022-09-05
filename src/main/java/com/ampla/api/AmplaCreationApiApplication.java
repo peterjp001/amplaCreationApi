@@ -1,7 +1,7 @@
 package com.ampla.api;
 
-import com.ampla.api.security.entities.AppRole;
-import com.ampla.api.security.entities.AppUser;
+import com.ampla.api.security.entities.Role;
+import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,12 +31,12 @@ public class AmplaCreationApiApplication {
     @Bean
     CommandLineRunner start(AccountService accountService){
         return args -> {
-            Optional<AppUser> appUser = Optional.ofNullable(accountService.getUserByusername("JohnDoe"));
+            Optional<User> appUser = Optional.ofNullable(accountService.getUserByusername("JohnDoe"));
             if(appUser.isEmpty()){
-                accountService.addNewUser(new AppUser(null,"JohnDoe","Admin@123",new ArrayList<>(), null));
+                accountService.addNewUser(new User(null,"JohnDoe","Admin@123",new ArrayList<>(), null));
                 System.out.println("super administrator user created");
-                accountService.addNewRole(new AppRole(null, "ADMIN"));
-                accountService.addNewRole(new AppRole(null, "USER"));
+                accountService.addNewRole(new Role(null, "ADMIN"));
+                accountService.addNewRole(new Role(null, "USER"));
                 System.out.println("USER and ADMIN roles created");
                 accountService.addRoleToUser("JohnDoe","USER");
                 accountService.addRoleToUser("JohnDoe","ADMIN");

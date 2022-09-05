@@ -1,11 +1,10 @@
 package com.ampla.api.security.config;
 
-import com.ampla.api.security.entities.AppUser;
+import com.ampla.api.security.entities.User;
 import com.ampla.api.security.filter.JwtAuthenticationFilter;
 import com.ampla.api.security.filter.JwtAuthorizationFilter;
 import com.ampla.api.security.service.AccountService;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +25,7 @@ import java.util.Collection;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public SecurityConfig(AccountService accountService) {
         this.accountService = accountService;
@@ -39,12 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                AppUser appUser = accountService.getUserByusername(username);
+                User user = accountService.getUserByusername(username);
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
-                appUser.getAppRoles().forEach(r->{
+                user.getRoles().forEach(r->{
                     authorities.add(new SimpleGrantedAuthority(r.getRoleName()));
                 });
-                return new User(appUser.getUsername(),appUser.getPassword(),authorities);
+                return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),authorities);
             }
         });
     }
@@ -55,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        http.formLogin();
-        http.authorizeRequests().antMatchers("/refreshToken/**","/login/**").permitAll();
+        http.authorizeRequests().antMatchers("/refreshToken/**","/login/**","/newemployee/**").permitAll();
 
 //        http.authorizeRequests().antMatchers(HttpMethod.POST, "/users/**").hasAnyAuthority("ADMIN");
 //        http.authorizeRequests().antMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("STANDARD");
