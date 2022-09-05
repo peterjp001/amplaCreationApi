@@ -1,20 +1,22 @@
 package com.ampla.api.security.controller;
 
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.RoleUserDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ampla.api.security.entities.AppRole;
-import com.ampla.api.security.entities.AppUser;
+import com.ampla.api.security.entities.Role;
+import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
-import lombok.Data;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 public class AccountRestController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AccountRestController(AccountService accountService) {
         this.accountService = accountService;
@@ -30,41 +32,54 @@ public class AccountRestController {
 
 
     @GetMapping(path="/users")
-    @PostAuthorize("hasAnyAuthority('USER')")
-    public List<AppUser> appUsers(){
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public List<User> appUsers(){
         return  accountService.listUsers();
     }
 
-    @GetMapping(path="/users/{id}")
-    @PostAuthorize("hasAnyAuthority('USER')")
-    public Optional<AppUser> appUser(@PathVariable Long id){
+    @GetMapping(path="/user/{id}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public Optional<User> appUser(@PathVariable Long id) throws DataNotFoundException {
         return  accountService.getUserById(id);
     }
 
-    @PostMapping(path="/users")
+    @PostMapping(path="/user")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public AppUser saveUser(@RequestBody AppUser appUser){
-        return accountService.addNewUser(appUser);
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
+        return ResponseEntity.ok(accountService.addNewUser(user));
     }
 
-    @PostMapping(path="/roles")
+    @PutMapping(path="/user/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public AppRole saveRole(@RequestBody AppRole appRole){
-        return accountService.addNewRole(appRole);
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) throws DataNotFoundException {
+            return ResponseEntity.ok( accountService.updateUser(id,user));
     }
+
+    @DeleteMapping(path="/user/{id}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void deleteUser(@PathVariable("id") Long id){
+        accountService.deleteUser(id);
+    }
+
+
+//    @PostMapping(path="/roles")
+//    @PostAuthorize("hasAnyAuthority('ADMIN')")
+//    public Role saveRole(@RequestBody Role role){
+//        return accountService.addNewRole(role);
+//    }
 
     @GetMapping(path="/roles")
-    @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public List<AppRole> getAllRoles(){
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<Role> getAllRoles(){
         return accountService.listRoles();
     }
 
 
-    @PostMapping(path="/addRoleToUser")
-    @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public void addRoleToUser(@RequestBody RoleUserDTO roleUserDTO){
-        accountService.addRoleToUser(roleUserDTO.getUsername(), roleUserDTO.getRoleName());
-    }
+//    @PostMapping(path="/addRoleToUser")
+//    @PostAuthorize("hasAnyAuthority('ADMIN')")
+//    public void addRoleToUser(@RequestBody RoleUserDTO roleUserDTO){
+//        accountService.addRoleToUser(roleUserDTO.getUsername(), roleUserDTO.getRoleName());
+//    }
 
     @GetMapping(path="/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws Exception {
@@ -78,13 +93,13 @@ public class AccountRestController {
                 JWTVerifier jwtVerifier = JWT.require(algo).build();
                 DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
                 String username = decodedJWT.getSubject();
-                AppUser appUser = accountService.getUserByusername(username);
+                User user = accountService.getUserByusername(username);
 
                 String access_token = JWT.create()
-                        .withSubject(appUser.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+5*60*1000))
+                        .withSubject(user.getUsername())
+                        .withExpiresAt(new Date(System.currentTimeMillis()+120*60*1000))
                         .withIssuer(req.getRequestURL().toString())
-                        .withClaim("roles", appUser.getAppRoles().stream().map(r->r.getRoleName()).collect(Collectors.toList()))
+                        .withClaim("roles", user.getRoles().stream().map(r->r.getRoleName()).collect(Collectors.toList()))
                         .sign(algo);
 
                 Map<String,String> idToken = new HashMap<>();
@@ -105,7 +120,7 @@ public class AccountRestController {
     }
 
     @GetMapping(path ="/profile")
-        public AppUser profile(Principal principal){
+        public User profile(Principal principal){
             return accountService.getUserByusername(principal.getName());
         }
 

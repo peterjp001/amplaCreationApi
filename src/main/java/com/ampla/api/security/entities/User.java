@@ -8,22 +8,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Data @NoArgsConstructor @AllArgsConstructor
-public class AppUser {
+public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Username required.")
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "Password required.")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<AppRole> appRoles = new ArrayList<>();
+    private Collection<Role> roles = new ArrayList<>();
 
     @JsonIgnore
     @OneToOne(mappedBy = "user")

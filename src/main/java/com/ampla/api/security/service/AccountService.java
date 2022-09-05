@@ -1,27 +1,35 @@
 package com.ampla.api.security.service;
 
-import com.ampla.api.security.entities.AppRole;
-import com.ampla.api.security.entities.AppUser;
+import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.security.entities.Role;
+import com.ampla.api.security.entities.User;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public interface AccountService {
 
-    AppUser addNewUser(AppUser appuser);
+    User addNewUser(User appuser);
 
-    Optional<AppUser> getUserById(Long id);
+    Boolean isUserHasRoles(String element, Collection<Role> role1);
 
-    AppUser addRoleUser(AppUser appUser);
+    User updateUser(Long id, User user) throws DataNotFoundException;
 
-    AppRole addNewRole(AppRole appRole);
+    Optional<User> getUserById(Long id) throws DataNotFoundException;
+
+    void deleteUser(Long id);
+
+    User addRoleUser(User user);
+
+    Role addNewRole(Role role);
 
     void addRoleToUser(String username, String roleName);
 
-    AppUser getUserByusername(String username);
+    User getUserByusername(String username);
 
-    List<AppUser> listUsers();
+    List<User> listUsers();
 
-    List<AppRole> listRoles();
+    List<Role> listRoles();
 
 }

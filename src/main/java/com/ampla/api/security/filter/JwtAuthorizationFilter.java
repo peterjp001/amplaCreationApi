@@ -1,9 +1,11 @@
 package com.ampla.api.security.filter;
 
+import com.ampla.api.exception.DataNotFoundException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -34,6 +37,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 Algorithm algo = Algorithm.HMAC256("noby");
                 JWTVerifier jwtVerifier = JWT.require(algo).build();
                 DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
+                if( decodedJWT.getExpiresAt().before(new Date())) {
+                    System.out.println("token is expired");
+                }
                 String username = decodedJWT.getSubject();
                 String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -45,7 +51,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request,response);
             }catch (Exception e){
-
                 System.out.println("Block filterchain");
                 response.setHeader("error-message",e.getMessage());
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
