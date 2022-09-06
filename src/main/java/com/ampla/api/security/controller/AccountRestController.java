@@ -1,6 +1,7 @@
 package com.ampla.api.security.controller;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.exception.UserAlreadyExistException;
 import com.ampla.api.mis.dto.RoleUserDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -45,13 +46,13 @@ public class AccountRestController {
 
     @PostMapping(path="/user")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws UserAlreadyExistException {
         return ResponseEntity.ok(accountService.addNewUser(user));
     }
 
     @PutMapping(path="/user/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) throws DataNotFoundException {
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) throws DataNotFoundException, UserAlreadyExistException {
             return ResponseEntity.ok( accountService.updateUser(id,user));
     }
 

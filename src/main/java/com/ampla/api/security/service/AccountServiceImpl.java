@@ -1,6 +1,7 @@
 package com.ampla.api.security.service;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.exception.UserAlreadyExistException;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.repository.RoleRepository;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NonUniqueResultException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +32,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public User addNewUser(User appuser) {
+    public User addNewUser(User appuser) throws UserAlreadyExistException {
         User newUser = new User();
 
         newUser.setUsername(appuser.getUsername());
@@ -38,6 +40,9 @@ public class AccountServiceImpl implements AccountService {
             newUser.setPassword(passwordEncoder.encode(appuser.getPassword()));
         }
         newUser = appUserRepository.save(newUser);
+        if(newUser == null){
+            throw new UserAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
+        }
 
         if (appuser.getRoles().size() >0){
             User finalNewUser = newUser;
@@ -55,14 +60,18 @@ public class AccountServiceImpl implements AccountService {
             for (Role userRole : role){
                 statement = Objects.equals(element, userRole.getRoleName()) ;
             }
+        }else{
+            statement = false;
+            System.out.println("No roles...");
         }
 
         return statement;
     }
 
     @Override
-    public User updateUser(Long id, User user) throws DataNotFoundException {
+    public User updateUser(Long id, User user) throws DataNotFoundException, UserAlreadyExistException {
         Optional<User> uniqueUser = appUserRepository.findById(id);
+
         User updatedUser = new User();
         if (uniqueUser.isPresent()) {
             User currentUser = uniqueUser.get();
@@ -72,6 +81,12 @@ public class AccountServiceImpl implements AccountService {
             Collection<Role> roles = user.getRoles();
 
             if (username != null) {
+                User testUser = appUserRepository.findByUsername(username);
+                if( testUser != null){
+                    if(currentUser.getId() != testUser.getId()){
+                        throw new UserAlreadyExistException("User "+ username+" Already exist");
+                    }
+                }
                 currentUser.setUsername(username);
             }
 
@@ -81,12 +96,20 @@ public class AccountServiceImpl implements AccountService {
 
             if (roles.size() > 0) {
                 roles.forEach(role -> {
-                    if(!isUserHasRoles(role.getRoleName(), currentUser.getRoles())){
-                        addRoleToUser(currentUser.getUsername(),role.getRoleName());
-                    }else{
-                        System.out.println("false");
-                    }
+                  if (currentUser.getRoles().contains(role)){
+                      if (role.getRoleName() != null && role.getId() != null) {
+                          System.out.println("No need to update Role");
+                      }
+                  }else {
+                      if (role.getRoleName() != null && role.getId() != null){
+                          addRoleToUser(currentUser.getUsername(), role.getRoleName());
+                      }
+
+                  }
                 });
+
+            }else{
+                System.out.println("No role to update");
             }
 
             updatedUser = appUserRepository.save(currentUser);
@@ -122,6 +145,8 @@ public class AccountServiceImpl implements AccountService {
         return appRoleRepository.save(role);
     }
 
+
+
     @Override
     public void addRoleToUser(String username, String roleName) {
         User au = appUserRepository.findByUsername(username);
@@ -129,6 +154,15 @@ public class AccountServiceImpl implements AccountService {
         System.out.println("Role "+ar.getRoleName()+ " To "+ au.getUsername());
 
         au.getRoles().add(ar);
+    }
+
+    @Override
+    public void removeRoleToUSer(String username, String roleName) {
+        User au = appUserRepository.findByUsername(username);
+        Role ar = appRoleRepository.findByRoleName(roleName);
+        System.out.println("Remove Role "+ar.getRoleName()+ " To "+ au.getUsername());
+
+        au.getRoles().remove(ar);
     }
 
     @Override
