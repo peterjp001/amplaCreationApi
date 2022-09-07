@@ -17,12 +17,12 @@ import java.util.Optional;
 
 
 @RestController
-public class AppController {
+public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final FunctionService functionService;
 
-    public AppController(EmployeeService employeeService, FunctionService functionService) {
+    public EmployeeController(EmployeeService employeeService, FunctionService functionService) {
         this.employeeService = employeeService;
         this.functionService = functionService;
     }
