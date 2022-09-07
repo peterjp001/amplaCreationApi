@@ -5,15 +5,14 @@ import com.ampla.api.exception.UserAlreadyExistException;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
 public interface AccountService {
 
-    User addNewUser(User appuser) throws UserAlreadyExistException;
-
-    Boolean isUserHasRoles(String element, Collection<Role> role1);
+    User addNewUser(User appuser) throws UserAlreadyExistException, DataNotFoundException;
 
     User updateUser(Long id, User user) throws DataNotFoundException, UserAlreadyExistException;
 
@@ -21,7 +20,7 @@ public interface AccountService {
 
     void deleteUser(Long id);
 
-    User addRoleUser(User user);
+//    User addRoleUser(User user);
 
     Role addNewRole(Role role);
 
@@ -34,5 +33,7 @@ public interface AccountService {
     List<User> listUsers();
 
     List<Role> listRoles();
+
+    void refreshToken(HttpServletResponse res, HttpServletRequest req) throws Exception;
 
 }

@@ -46,7 +46,7 @@ public class AccountRestController {
 
     @PostMapping(path="/user")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws UserAlreadyExistException {
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws UserAlreadyExistException, DataNotFoundException {
         return ResponseEntity.ok(accountService.addNewUser(user));
     }
 
@@ -76,48 +76,22 @@ public class AccountRestController {
     }
 
 
-//    @PostMapping(path="/addRoleToUser")
-//    @PostAuthorize("hasAnyAuthority('ADMIN')")
-//    public void addRoleToUser(@RequestBody RoleUserDTO roleUserDTO){
-//        accountService.addRoleToUser(roleUserDTO.getUsername(), roleUserDTO.getRoleName());
-//    }
+
+    @PostMapping(path="/addroletouser/user/{username}/role/{roleName}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void addRoleToUser(@PathVariable("username") String username, @PathVariable("roleName") String roleName){
+        accountService.addRoleToUser(username, roleName);
+    }
+
+    @PostMapping(path="/removeroletouser/user/{username}/role/{roleName}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void removeRoleToUser(@PathVariable("username") String username, @PathVariable("roleName") String roleName){
+        accountService.removeRoleToUSer(username, roleName);
+    }
 
     @GetMapping(path="/refreshToken")
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        String jwtAuthorizationToken = req.getHeader("Authorization");
-        if(jwtAuthorizationToken != null && jwtAuthorizationToken.startsWith("Bearer ")){
-
-            try{
-                System.out.println("Get new Token");
-                String jwt = jwtAuthorizationToken.substring(7);
-                Algorithm algo = Algorithm.HMAC256("noby");
-                JWTVerifier jwtVerifier = JWT.require(algo).build();
-                DecodedJWT decodedJWT = jwtVerifier.verify(jwt);
-                String username = decodedJWT.getSubject();
-                User user = accountService.getUserByusername(username);
-
-                String access_token = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+120*60*1000))
-                        .withIssuer(req.getRequestURL().toString())
-                        .withClaim("roles", user.getRoles().stream().map(r->r.getRoleName()).collect(Collectors.toList()))
-                        .sign(algo);
-
-                Map<String,String> idToken = new HashMap<>();
-                idToken.put("access_token", access_token);
-                idToken.put("refresh_token", jwt);
-                new ObjectMapper().writeValue(res.getOutputStream(),idToken);
-                res.setContentType("application/json");
-
-
-            }catch (Exception e){
-                res.setHeader("error-message",e.getMessage());
-                res.sendError(HttpServletResponse.SC_FORBIDDEN);
-                System.out.println("Block new Refresh Token");
-            }
-        }else{
-            throw  new RuntimeException("Refresh Token Required");
-        }
+        accountService.refreshToken(res,req);
     }
 
     @GetMapping(path ="/profile")
