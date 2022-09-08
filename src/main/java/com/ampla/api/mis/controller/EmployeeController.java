@@ -1,11 +1,15 @@
 package com.ampla.api.mis.controller;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.exception.UserAlreadyExistException;
+import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
+import com.ampla.api.mis.dto.ResponseEmployeeUser;
 import com.ampla.api.mis.entities.Employee;
 import com.ampla.api.mis.entities.Function;
 import com.ampla.api.mis.service.EmployeeService;
 import com.ampla.api.mis.service.FunctionService;
+import com.ampla.api.security.entities.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -27,31 +31,18 @@ public class EmployeeController {
         this.functionService = functionService;
     }
 
-    @PostMapping(path = "/newemployee")
+    @PostMapping(path = "/newEmployeeWithNoAccount")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<Employee> newEmployee( @RequestBody @Valid EmployeeUserDTO euDTO){
-        Employee emp = new Employee();
-        emp.setFirstName(euDTO.getFirstName());
-        emp.setLastName(euDTO.getLastName());
-        emp.setSexe(euDTO.getSexe());
-        emp.setEmail(euDTO.getEmail());
-        emp.setPhone(euDTO.getPhone());
-        emp.setBirthDate(euDTO.getBirthDate());
-        emp.setNif(euDTO.getNif());
-        Employee newEmp = employeeService.saveEmployee(emp);
-        euDTO.getFunction().forEach(function -> {
-            Function func = functionService.getFunctionByFunctionName(function.getFunctionName());
-            newEmp.getFunctions().add(func);
-        });
-        return new ResponseEntity<>( employeeService.saveEmployee(newEmp), HttpStatus.CREATED);
+    public ResponseEntity<Employee> newEmployee( @RequestBody @Valid EmployeeFunctionDTO efDTO) throws DataNotFoundException {
+
+        return new ResponseEntity<>( employeeService.newEmployeeWithNoAccount(efDTO), HttpStatus.CREATED);
     }
 
-    @PostMapping(path = "/newEmployeeWithUserAccount")
+    @PostMapping(path = "/newEmployeeWithAccount")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<EmployeeUserDTO> newEmployeeWithUserAccount(@Valid @RequestBody EmployeeUserDTO euDTO){
-        return ResponseEntity.ok(euDTO);
+    public ResponseEntity<ResponseEmployeeUser> newEmployeeWithUserAccount(@Valid @RequestBody EmployeeUserDTO euDTO) throws DataNotFoundException, UserAlreadyExistException {
+        return ResponseEntity.ok( employeeService.newEmployeeWithAccount(euDTO));
     }
-
 
 
 

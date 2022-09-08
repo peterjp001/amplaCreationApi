@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -33,13 +34,17 @@ public class AmplaCreationApiApplication {
         return args -> {
             Optional<User> appUser = Optional.ofNullable(accountService.getUserByusername("JohnDoe"));
             if(appUser.isEmpty()){
-                accountService.addNewUser(new User(null,"JohnDoe","Admin@123",new ArrayList<>(), null));
-                System.out.println("super administrator user created");
-                accountService.addNewRole(new Role(null, "ADMIN"));
-                accountService.addNewRole(new Role(null, "USER"));
-                System.out.println("USER and ADMIN roles created");
-                accountService.addRoleToUser("JohnDoe","USER");
-                accountService.addRoleToUser("JohnDoe","ADMIN");
+                accountService.addNewRole(new Role(null,"ADMIN"));
+                accountService.addNewRole(new Role(null,"USER"));
+
+                User superAdmin = new User();
+                superAdmin.setUsername("JohnDoe");
+                superAdmin.setPassword("Admin@123");
+                List<Role> superAdminRole = new ArrayList<>();
+                superAdminRole.add(new Role(null,"ADMIN"));
+                superAdminRole.add(new Role(null,"USER"));
+                superAdmin.setRoles(superAdminRole);
+                accountService.addNewUser(superAdmin);
                 System.out.println("super administrator roles assigned to the user");
             }else{
                 System.out.println("Super Admin Exist");

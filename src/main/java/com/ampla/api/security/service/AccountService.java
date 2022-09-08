@@ -22,7 +22,7 @@ public interface AccountService {
 
 //    User addRoleUser(User user);
 
-    Role addNewRole(Role role);
+    void addNewRole(Role role);
 
 
     void addRoleToUser(String username, String roleName);
