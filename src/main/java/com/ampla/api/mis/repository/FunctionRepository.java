@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FunctionRepository extends JpaRepository<Function, Long> {
-    Function findByFunctionName(String statusName);
+    Function findByFunctionName(String functionName);
 }

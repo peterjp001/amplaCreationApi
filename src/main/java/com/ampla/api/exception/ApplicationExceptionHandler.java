@@ -2,6 +2,7 @@ package com.ampla.api.exception;
 
 import com.ampla.api.exception.DataNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +44,12 @@ public class ApplicationExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(UserAlreadyExistException.class)
     public Map<String, String> handlePersistenceException(UserAlreadyExistException ex) {
+        return errorBody(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MessageNotReadableException.class)
+    public Map<String, String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return errorBody(ex.getMessage());
     }
 
