@@ -1,7 +1,7 @@
 package com.ampla.api.mis.service.impl;
 
 import com.ampla.api.exception.DataNotFoundException;
-import com.ampla.api.exception.UserAlreadyExistException;
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
 import com.ampla.api.mis.dto.ResponseEmployeeUser;
@@ -64,6 +64,41 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public Employee updateEmployee(Long id, EmployeeFunctionDTO efDTO) throws DataNotFoundException{
+
+        Optional<Employee> emp = this.getEmployeeById(id);
+
+        if(emp.isEmpty()){
+            throw  new DataNotFoundException("Employee with id "+id+ " not found");
+        }
+        Employee updateEmp = emp.get();
+
+        if(efDTO.getFirstName() != null){
+            updateEmp.setFirstName(efDTO.getFirstName());
+        }
+        if (efDTO.getLastName() != null){
+            updateEmp.setLastName(efDTO.getLastName());
+        }
+        if(efDTO.getSexe() != null){
+            updateEmp.setSexe(efDTO.getSexe());
+        }
+        if(efDTO.getNif() != null){
+            updateEmp.setNif(efDTO.getNif());
+        }
+        if(efDTO.getEmail() != null){
+            updateEmp.setEmail(efDTO.getEmail());
+        }
+        if(efDTO.getPhone() != null){
+            updateEmp.setPhone(efDTO.getPhone());
+        }
+        if(efDTO.getBirthDate() != null){
+            updateEmp.setBirthDate(efDTO.getBirthDate());
+        }
+
+        return emplRepo.save(updateEmp);
+    }
+
+    @Override
     public void deleteEmployee(Long id) {
         emplRepo.deleteById(id);
     }
@@ -95,7 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEmployeeUser newEmployeeWithAccount(EmployeeUserDTO euDTO) throws UserAlreadyExistException, DataNotFoundException {
+    public ResponseEmployeeUser newEmployeeWithAccount(EmployeeUserDTO euDTO) throws DataAlreadyExistException, DataNotFoundException {
         User u = new User();
         Employee emp = new Employee();
 

@@ -1,7 +1,7 @@
 package com.ampla.api.security.service;
 
 import com.ampla.api.exception.DataNotFoundException;
-import com.ampla.api.exception.UserAlreadyExistException;
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 
@@ -12,9 +12,9 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    User addNewUser(User appuser) throws UserAlreadyExistException, DataNotFoundException;
+    User addNewUser(User appuser) throws DataAlreadyExistException, DataNotFoundException;
 
-    User updateUser(Long id, User user) throws DataNotFoundException, UserAlreadyExistException;
+    User updateUser(Long id, User user) throws DataNotFoundException, DataAlreadyExistException;
 
     Optional<User> getUserById(Long id) throws DataNotFoundException;
 

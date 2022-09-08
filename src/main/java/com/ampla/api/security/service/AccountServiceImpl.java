@@ -1,7 +1,7 @@
 package com.ampla.api.security.service;
 
 import com.ampla.api.exception.DataNotFoundException;
-import com.ampla.api.exception.UserAlreadyExistException;
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.repository.RoleRepository;
@@ -39,10 +39,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public User addNewUser(User appuser) throws UserAlreadyExistException, DataNotFoundException {
+    public User addNewUser(User appuser) throws DataAlreadyExistException, DataNotFoundException {
         User newUser = new User();
         if (appUserRepository.findByUsername(appuser.getUsername()) != null){
-            throw new UserAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
+            throw new DataAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
         }
 
         newUser.setUsername(appuser.getUsername());
@@ -51,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
         }
         newUser = appUserRepository.save(newUser);
         if(newUser == null){
-            throw new UserAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
+            throw new DataAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
         }
 
         if (appuser.getRoles().size() >0){
@@ -68,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public User updateUser(Long id, User user) throws DataNotFoundException, UserAlreadyExistException {
+    public User updateUser(Long id, User user) throws DataNotFoundException, DataAlreadyExistException {
         Optional<User> uniqueUser = appUserRepository.findById(id);
 
         User updatedUser = new User();
@@ -83,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
                 User testUser = appUserRepository.findByUsername(username);
                 if( testUser != null){
                     if(currentUser.getId() != testUser.getId()){
-                        throw new UserAlreadyExistException("User "+ username+" Already exist");
+                        throw new DataAlreadyExistException("User "+ username+" Already exist");
                     }
                 }
                 currentUser.setUsername(username);
