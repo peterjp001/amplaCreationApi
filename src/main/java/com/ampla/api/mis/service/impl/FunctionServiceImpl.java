@@ -1,5 +1,7 @@
 package com.ampla.api.mis.service.impl;
 
+import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.entities.Employee;
 import com.ampla.api.mis.entities.Function;
 import com.ampla.api.mis.repository.EmployeeRepository;
@@ -24,7 +26,11 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public Function addNewStatus(Function function) {
+    public Function addNewFunction(Function function) throws DataAlreadyExistException {
+        Optional<Function> func = Optional.ofNullable(functionRepository.findByFunctionName(function.getFunctionName()));
+        if(func.isPresent()){
+            throw new DataAlreadyExistException("Function "+ function.getFunctionName()+ " already exist");
+        }
         return functionRepository.save(function);
     }
 
@@ -44,12 +50,24 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public List<Function> listStatus() {
+    public List<Function> listFunction() {
         return functionRepository.findAll();
     }
 
     @Override
     public Function getFunctionByFunctionName(String statusName) {
         return functionRepository.findByFunctionName(statusName);
+    }
+
+    @Override
+    public Function updateFunction(Long id, Function function) throws DataNotFoundException {
+        Optional<Function> func = functionRepository.findById(id);
+        if (func.isEmpty()){
+            throw new DataNotFoundException("Function with id "+ id+ " not found");
+        }
+        Function updateFunc = func.get();
+        updateFunc.setFunctionName(function.getFunctionName());
+
+        return functionRepository.save(updateFunc);
     }
 }

@@ -1,13 +1,7 @@
 package com.ampla.api.security.controller;
 
 import com.ampla.api.exception.DataNotFoundException;
-import com.ampla.api.exception.UserAlreadyExistException;
-import com.ampla.api.mis.dto.RoleUserDTO;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
@@ -20,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class AccountRestController {
@@ -46,13 +39,13 @@ public class AccountRestController {
 
     @PostMapping(path="/user")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws UserAlreadyExistException, DataNotFoundException {
+    public ResponseEntity<User> saveUser(@RequestBody @Valid User user) throws DataAlreadyExistException, DataNotFoundException {
         return ResponseEntity.ok(accountService.addNewUser(user));
     }
 
     @PutMapping(path="/user/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) throws DataNotFoundException, UserAlreadyExistException {
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody User user) throws DataNotFoundException, DataAlreadyExistException {
             return ResponseEntity.ok( accountService.updateUser(id,user));
     }
 

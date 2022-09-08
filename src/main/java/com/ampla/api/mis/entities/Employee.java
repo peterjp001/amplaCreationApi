@@ -10,9 +10,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +39,7 @@ public class Employee implements Serializable {
     private String sexe;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Column(name = "phone")

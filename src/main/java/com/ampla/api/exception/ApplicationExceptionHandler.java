@@ -1,6 +1,5 @@
 package com.ampla.api.exception;
 
-import com.ampla.api.exception.DataNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -42,8 +41,8 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public Map<String, String> handlePersistenceException(UserAlreadyExistException ex) {
+    @ExceptionHandler(DataAlreadyExistException.class)
+    public Map<String, String> handlePersistenceException(DataAlreadyExistException ex) {
         return errorBody(ex.getMessage());
     }
 
