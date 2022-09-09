@@ -28,4 +28,8 @@ public interface EmployeeService {
     ResponseEmployeeUser newEmployeeWithAccount(EmployeeUserDTO euDTO) throws DataAlreadyExistException, DataNotFoundException;
 
 
+    void addFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException;
+
+    void removeFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException;
+
 }

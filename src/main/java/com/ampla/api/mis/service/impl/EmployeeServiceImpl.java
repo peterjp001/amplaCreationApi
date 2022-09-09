@@ -12,6 +12,9 @@ import com.ampla.api.mis.repository.FunctionRepository;
 import com.ampla.api.mis.service.EmployeeService;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
+import com.ampla.api.security.service.AccountServiceImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +24,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
-
+    
+    protected static final Log logger = LogFactory.getLog(EmployeeServiceImpl.class);
     private final EmployeeRepository emplRepo;
     private final AccountService accountService;
 
@@ -157,5 +161,42 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return new ResponseEmployeeUser(newEmp, newUser);
+    }
+
+    @Override
+    public void addFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException {
+        Optional<Employee> emp = emplRepo.findById(idEmployee);
+        if(emp.isEmpty()){
+            throw new DataNotFoundException("Employee with id "+idEmployee+ " not found");
+        }
+        Employee employee = emp.get();
+
+        Function func = functionRepository.findByFunctionName(functionName);
+
+        if(!employee.getFunctions().contains(func)){
+            logger.info("Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
+            employee.getFunctions().add(func);
+        }else{
+            logger.error("Can't add Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
+        }
+    }
+
+
+    @Override
+    public void removeFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException {
+        Optional<Employee> emp = emplRepo.findById(idEmployee);
+        if(emp.isEmpty()){
+            throw new DataNotFoundException("Employee with id "+idEmployee+ " not found");
+        }
+        Employee employee = emp.get();
+
+        Function func = functionRepository.findByFunctionName(functionName);
+
+        if(employee.getFunctions().contains(func)){
+            logger.info("Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
+            employee.getFunctions().remove(func);
+        }else{
+            logger.error("Can't add Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
+        }
     }
 }

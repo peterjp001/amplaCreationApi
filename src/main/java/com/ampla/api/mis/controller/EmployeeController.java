@@ -32,21 +32,21 @@ public class EmployeeController {
 
     @PostMapping(path = "/newEmployeeWithNoAccount")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<Employee> newEmployee( @RequestBody @Valid EmployeeFunctionDTO efDTO) throws DataNotFoundException {
+    public ResponseEntity<Employee> newEmployee(@RequestBody @Valid EmployeeFunctionDTO efDTO) throws DataNotFoundException {
 
-        return new ResponseEntity<>( employeeService.newEmployeeWithNoAccount(efDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(employeeService.newEmployeeWithNoAccount(efDTO), HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/newEmployeeWithAccount")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<ResponseEmployeeUser> newEmployeeWithUserAccount(@Valid @RequestBody EmployeeUserDTO euDTO) throws DataNotFoundException, DataAlreadyExistException {
-        return ResponseEntity.ok( employeeService.newEmployeeWithAccount(euDTO));
+        return ResponseEntity.ok(employeeService.newEmployeeWithAccount(euDTO));
     }
 
 
     @GetMapping(path = "/employees")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<List<Employee>> listEmployee(){
+    public ResponseEntity<List<Employee>> listEmployee() {
         return ResponseEntity.ok(employeeService.listEmployee());
     }
 
@@ -55,8 +55,8 @@ public class EmployeeController {
     @PostAuthorize("hasAnyAuthority('USER')")
     public ResponseEntity<Optional<Employee>> getOneEmployee(@PathVariable("id") Long id) throws DataNotFoundException {
         Optional<Employee> emp = employeeService.getEmployeeById(id);
-        if(emp.isEmpty()){
-            throw new DataNotFoundException("Employee with id "+id+" doesn't exist");
+        if (emp.isEmpty()) {
+            throw new DataNotFoundException("Employee with id " + id + " doesn't exist");
         }
         return ResponseEntity.ok(emp);
     }
@@ -64,7 +64,7 @@ public class EmployeeController {
 
     @DeleteMapping(path = "/employee/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public void deleteEmployee(@PathVariable("id") Long id){
+    public void deleteEmployee(@PathVariable("id") Long id) {
         employeeService.deleteEmployee(id);
     }
 
@@ -72,25 +72,37 @@ public class EmployeeController {
     @PutMapping(path = "/employee/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Employee> updateEmployee(@PathVariable("id") Long id, @RequestBody EmployeeFunctionDTO efDTO) throws DataNotFoundException {
-        return new ResponseEntity<>( employeeService.updateEmployee(id,efDTO), HttpStatus.OK);
+        return new ResponseEntity<>(employeeService.updateEmployee(id, efDTO), HttpStatus.OK);
     }
 
     @PostMapping(path = "/newfunction")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public Function newFunction(@RequestBody @Valid Function function) throws DataAlreadyExistException{
+    public Function newFunction(@RequestBody @Valid Function function) throws DataAlreadyExistException {
         return functionService.addNewFunction(function);
     }
 
     @GetMapping(path = "/functions")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public List<Function> listFunction(){
+    public List<Function> listFunction() {
         return functionService.listFunction();
     }
 
     @PutMapping(path = "/function/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public Function updateFunction(@PathVariable("id") Long id, @RequestBody Function function) throws DataNotFoundException {
-        return functionService.updateFunction(id,function);
+        return functionService.updateFunction(id, function);
+    }
+
+    @PostMapping(path = "/addfunctiontoemployee/employee/{id}/function/{functionName}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void addfunctiontoemployee(@PathVariable("id") Long id, @PathVariable("functionName") String functionName) throws DataNotFoundException {
+        employeeService.addFunctionToEmployee(id, functionName);
+    }
+
+    @PostMapping(path = "/removefunctiontoemployee/employee/{id}/function/{functionName}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void removefunctiontoemployee(@PathVariable("id") Long id, @PathVariable("functionName") String functionName) throws DataNotFoundException {
+        employeeService.removeFunctionToEmployee(id, functionName);
     }
 
 }

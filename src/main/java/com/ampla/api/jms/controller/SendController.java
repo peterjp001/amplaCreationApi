@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+//@RestController
 public class SendController {
-
-    private SendService service;
-
-    public SendController(SendService service) {
-        this.service = service;
-    }
-
-    @PostMapping(path="/send/{name}")
-    @PostAuthorize("hasAnyAuthority('USER')")
-    public String SendName(@PathVariable  String name){
-        // DEFINE SERVICE CLASS
-        service.sendNane(name);
-        return name;
-    }
+//
+//    private SendService service;
+//
+//    public SendController(SendService service) {
+//        this.service = service;
+//    }
+//
+//    @PostMapping(path="/send/{name}")
+//    @PostAuthorize("hasAnyAuthority('USER')")
+//    public String SendName(@PathVariable  String name){
+//        // DEFINE SERVICE CLASS
+//        service.sendNane(name);
+//        return name;
+//    }
 }

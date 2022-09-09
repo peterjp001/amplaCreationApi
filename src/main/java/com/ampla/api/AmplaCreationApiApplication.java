@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,19 +49,8 @@ public class AmplaCreationApiApplication {
                 System.out.println("super administrator roles assigned to the user");
             }else{
                 System.out.println("Super Admin Exist");
+                System.out.println(new Date(System.currentTimeMillis()+120*60*1000));
             }
-//            ADD ROLE TO THE DATABASE
-//            accountService.addNewRole(new AppRole(null, "STANDARD"));
-//            accountService.addNewRole(new AppRole(null, "ADMIN"));
-
-//          ADD USER TO THE DATABASE
-//            accountService.addNewUser(new AppUser(null,"user1","1234",new ArrayList<>()));
-//            accountService.addNewUser(new AppUser(null,"user2","1234",new ArrayList<>()));
-
-//          ADD ROLE TO USER
-//            accountService.addRoleToUser("user1","ADMIN");
-//            accountService.addRoleToUser("user1","STANDARD");
-//            accountService.addRoleToUser("user2","STANDARD");
 
 
         };
