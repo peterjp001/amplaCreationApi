@@ -30,6 +30,7 @@ public class User implements Serializable {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @NotBlank(message = "List Roles required.")
     private Collection< Role> roles = new ArrayList<>();
 
     @JsonIgnore

@@ -51,7 +51,7 @@ public class Employee implements Serializable {
     @Column(name = "nif")
     private String nif;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Function> functions = new ArrayList<>();
 
     @JsonIgnore

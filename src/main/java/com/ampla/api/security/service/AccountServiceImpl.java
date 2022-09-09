@@ -155,7 +155,7 @@ public class AccountServiceImpl implements AccountService {
         Role ar = appRoleRepository.findByRoleName(roleName);
 
 
-        if(!au.getRoles().contains(ar)){
+        if(au.getRoles().contains(ar)){
             logger.warn("Remove Role "+ar.getRoleName()+ " To "+ au.getUsername());
             au.getRoles().remove(ar);
         }else{
