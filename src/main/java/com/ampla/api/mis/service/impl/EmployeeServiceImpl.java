@@ -12,14 +12,16 @@ import com.ampla.api.mis.repository.FunctionRepository;
 import com.ampla.api.mis.service.EmployeeService;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
-import com.ampla.api.security.service.AccountServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -39,7 +41,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee saveEmployee(Employee emp) {
+    public String createCodeEmployee(String firstName, String lastName, String phone) {
+        return (
+                firstName.substring(0,2)+phone.substring(0,4)+"-"+lastName.substring(0,2)+phone.substring(4,8)
+        ).toUpperCase();
+    }
+
+    @Override
+    public Employee getByPhone(String phone) {
+        return emplRepo.findByPhone(phone);
+    }
+
+    @Override
+    public Boolean testPhone(String phone) {
+        Pattern pattern = Pattern.compile("^+509");
+        Matcher matcher = pattern.matcher(phone);
+        return  matcher.matches();
+    }
+
+
+    @Override
+    public Employee saveEmployee(Employee emp) throws DataAlreadyExistException {
+        Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(emp.getPhone()));
+        if (empPhoneExist.isPresent()){
+            throw new DataAlreadyExistException("Phone "+emp.getPhone()+ " already exist");
+        }
+        emp.setCodeEmployee(createCodeEmployee(emp.getFirstName(), emp.getLastName(), emp.getPhone()));
         return emplRepo.save(emp);
     }
 
@@ -68,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee updateEmployee(Long id, EmployeeFunctionDTO efDTO) throws DataNotFoundException{
+    public Employee updateEmployee(Long id, EmployeeFunctionDTO efDTO) throws DataNotFoundException, DataAlreadyExistException {
 
         Optional<Employee> emp = this.getEmployeeById(id);
 
@@ -93,6 +120,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             updateEmp.setEmail(efDTO.getEmail());
         }
         if(efDTO.getPhone() != null){
+            Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(efDTO.getPhone()));
+            if (empPhoneExist.isPresent()){
+                throw new DataAlreadyExistException("Phone "+efDTO.getPhone()+ " already exist");
+            }
             updateEmp.setPhone(efDTO.getPhone());
         }
         if(efDTO.getBirthDate() != null){
@@ -108,15 +139,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee newEmployeeWithNoAccount(EmployeeFunctionDTO euDTO) throws DataNotFoundException {
+    public Employee newEmployeeWithNoAccount(EmployeeFunctionDTO euDTO) throws DataNotFoundException, DataAlreadyExistException {
 
         Employee emp = new Employee();
 
-        emp.setCodeEmployee(euDTO.getCodeEmployee());
+        emp.setCodeEmployee(createCodeEmployee(euDTO.getFirstName(), euDTO.getLastName(), euDTO.getPhone()));
         emp.setFirstName(euDTO.getFirstName());
         emp.setLastName(euDTO.getLastName());
         emp.setSexe(euDTO.getSexe());
         emp.setEmail(euDTO.getEmail());
+
+        Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(euDTO.getPhone()));
+        if (empPhoneExist.isPresent()){
+            throw new DataAlreadyExistException("Phone "+euDTO.getPhone()+ " already exist");
+        }
+
         emp.setPhone(euDTO.getPhone());
         emp.setBirthDate(euDTO.getBirthDate());
         emp.setNif(euDTO.getNif());
@@ -143,11 +180,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         u.setRoles(euDTO.getRoles());
         User newUser = accountService.addNewUser(u);
 
-        emp.setCodeEmployee(euDTO.getCodeEmployee());
+        emp.setCodeEmployee(createCodeEmployee(euDTO.getFirstName(), euDTO.getLastName(), euDTO.getPhone()));
         emp.setFirstName(euDTO.getFirstName());
         emp.setLastName(euDTO.getLastName());
         emp.setSexe(euDTO.getSexe());
         emp.setEmail(euDTO.getEmail());
+        Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(euDTO.getPhone()));
+        if (empPhoneExist.isPresent()){
+            throw new DataAlreadyExistException("Phone "+euDTO.getPhone()+ " already exist");
+        }
         emp.setPhone(euDTO.getPhone());
         emp.setBirthDate(euDTO.getBirthDate());
         emp.setNif(euDTO.getNif());
@@ -161,6 +202,39 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         return new ResponseEmployeeUser(newEmp, newUser);
+    }
+
+    @Override
+    public ResponseEmployeeUser userToExistingEmployee(User user, Long idEmployee) throws DataNotFoundException {
+
+        Optional<Employee> emp = getEmployeeById(idEmployee);
+        if (emp.isEmpty()) throw new DataNotFoundException("Employee with id "+idEmployee+" not exist");
+        Employee employee = emp.get();
+        if(employee.getUser() != null)
+            throw new DataAlreadyExistException("An user account already exist for employee with id " + idEmployee);
+        User newUser = accountService.addNewUser(user);
+        employee.setUser(newUser);
+        Employee empResult = emplRepo.save(employee);
+        return new ResponseEmployeeUser(empResult,newUser);
+    }
+
+    @Override
+    public List<ResponseEmployeeUser> allEmployeeWithUserAccount() {
+
+        List<User> users = accountService.listUsers();
+        List<ResponseEmployeeUser>  resEmpUser = new ArrayList<>();
+
+        for (User u: users) {
+            Employee emp = emplRepo.findEmployeeByUser(u);
+            if (emp != null){
+                ResponseEmployeeUser  reu = new ResponseEmployeeUser();
+                reu.setUserData(u);
+                reu.setEmployeeData(emp);
+                resEmpUser.add(reu);
+            }
+        }
+
+        return resEmpUser;
     }
 
     @Override
@@ -179,6 +253,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }else{
             logger.error("Can't add Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
         }
+        
     }
 
 

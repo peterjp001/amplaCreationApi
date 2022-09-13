@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course implements Serializable {
@@ -21,4 +20,19 @@ public class Course implements Serializable {
     @Column(name="course_name")
     private String courseName;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
 }

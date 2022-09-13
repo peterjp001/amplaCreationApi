@@ -1,6 +1,5 @@
 package com.ampla.api.exception;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -55,10 +54,12 @@ public class ApplicationExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(testException.class)
-    public Map<String, String> handleTestException(testException ex) {
+    @ExceptionHandler(UserAuthenticationException.class)
+    public Map<String, String> handleTestException(UserAuthenticationException ex) {
         return errorBody(ex.getMessage());
     }
+
+
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

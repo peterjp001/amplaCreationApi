@@ -13,7 +13,6 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Function implements Serializable {
@@ -25,4 +24,20 @@ public class Function implements Serializable {
 
     @NotBlank(message = "Function Name required.")
     private String functionName;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFunctionName() {
+        return functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+        this.functionName = functionName;
+    }
 }

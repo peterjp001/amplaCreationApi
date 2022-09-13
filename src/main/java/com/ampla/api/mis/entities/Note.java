@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Note {
@@ -19,4 +18,19 @@ public class Note {
     @Column(name = "point")
     private Float point;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Float getPoint() {
+        return point;
+    }
+
+    public void setPoint(Float point) {
+        this.point = point;
+    }
 }
