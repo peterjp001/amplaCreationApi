@@ -9,13 +9,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Data @NoArgsConstructor @AllArgsConstructor
+  @NoArgsConstructor @AllArgsConstructor
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -30,7 +31,7 @@ public class User implements Serializable {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @NotBlank(message = "List Roles required.")
+    @NotNull(message = "List Roles required.")
     private Collection< Role> roles = new ArrayList<>();
 
     @JsonIgnore
@@ -38,4 +39,43 @@ public class User implements Serializable {
     private Employee employee;
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 }

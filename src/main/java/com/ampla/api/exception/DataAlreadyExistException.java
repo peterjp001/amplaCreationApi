@@ -1,6 +1,8 @@
 package com.ampla.api.exception;
 
-public class DataAlreadyExistException extends Exception{
+import javax.persistence.NonUniqueResultException;
+
+public class DataAlreadyExistException extends NonUniqueResultException {
 
     public DataAlreadyExistException(String message){
         super(message);

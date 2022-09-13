@@ -6,12 +6,19 @@ import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
 import com.ampla.api.mis.dto.ResponseEmployeeUser;
 import com.ampla.api.mis.entities.Employee;
+import com.ampla.api.security.entities.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeService {
-    Employee saveEmployee(Employee emp);
+
+    String createCodeEmployee(String firstName, String lastName,  String phone);
+
+    Employee getByPhone(String phone);
+
+    Boolean testPhone(String phone);
+    Employee saveEmployee(Employee emp) throws DataAlreadyExistException;
 
     void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException;
 
@@ -19,13 +26,17 @@ public interface EmployeeService {
 
     Optional<Employee> getEmployeeById(Long id);
 
-    Employee updateEmployee(Long id, EmployeeFunctionDTO euDTO) throws DataNotFoundException;
+    Employee updateEmployee(Long id, EmployeeFunctionDTO euDTO) throws DataNotFoundException, DataAlreadyExistException;
 
     void deleteEmployee(Long id);
 
-    Employee newEmployeeWithNoAccount(EmployeeFunctionDTO emp) throws DataNotFoundException;
+    Employee newEmployeeWithNoAccount(EmployeeFunctionDTO emp) throws DataNotFoundException, DataAlreadyExistException;
 
     ResponseEmployeeUser newEmployeeWithAccount(EmployeeUserDTO euDTO) throws DataAlreadyExistException, DataNotFoundException;
+
+    ResponseEmployeeUser userToExistingEmployee(User user, Long idEmployee) throws DataNotFoundException;
+
+    List<ResponseEmployeeUser> allEmployeeWithUserAccount();
 
 
     void addFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException;

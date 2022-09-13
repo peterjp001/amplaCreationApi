@@ -1,5 +1,8 @@
 package com.ampla.api;
 
+import com.ampla.api.mis.entitiesnonpersistent.AllTeacher;
+import com.ampla.api.mis.service.AllTeacherService;
+import com.ampla.api.mis.service.EmployeeService;
 import com.ampla.api.security.entities.Role;
 import com.ampla.api.security.entities.User;
 import com.ampla.api.security.service.AccountService;
@@ -50,6 +53,7 @@ public class AmplaCreationApiApplication {
             }else{
                 System.out.println("Super Admin Exist");
                 System.out.println(new Date(System.currentTimeMillis()+120*60*1000));
+
             }
 
 
