@@ -90,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
             }
 
             if (password != null) {
-                currentUser.setPassword(password);
+                currentUser.setPassword(passwordEncoder.encode(password));
             }
 
             if (roles.size() > 0) {
@@ -194,7 +194,7 @@ public class AccountServiceImpl implements AccountService {
 
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+120*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))
                         .withIssuer(req.getRequestURL().toString())
                         .withClaim("roles", user.getRoles().stream().map(r->r.getRoleName()).collect(Collectors.toList()))
                         .sign(algo);

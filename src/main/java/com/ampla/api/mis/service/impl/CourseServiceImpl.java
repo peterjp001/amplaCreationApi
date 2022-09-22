@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service.impl;
 
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.job.TestMyJob;
 import com.ampla.api.mis.entities.Course;
 import com.ampla.api.mis.entities.Employee;
@@ -50,7 +51,23 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Optional<Course> getCourseById(Long id) {
-        return courseRepository.findById(id);
+    public Course getCourseById(Long id) throws DataNotFoundException {
+        Optional<Course> course =  courseRepository.findById(id);
+        if (course.isEmpty())
+            throw new DataNotFoundException("Course with id "+id+" not found");
+
+        return course.get();
+    }
+
+    @Override
+    public Course updateCourse(Long id, Course c) throws DataNotFoundException {
+        Optional<Course> course =  courseRepository.findById(id);
+        if (course.isEmpty())
+            throw new DataNotFoundException("Course with id "+id+" not found");
+        Course courseUpdated = course.get();
+        if (c.getCourseName() != null)
+            courseUpdated.setCourseName(c.getCourseName());
+
+        return courseRepository.save(courseUpdated);
     }
 }

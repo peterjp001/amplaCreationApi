@@ -15,7 +15,10 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.*;
 
+
+
 @RestController
+@CrossOrigin(origins = "*")
 public class AccountRestController {
 
     private final AccountService accountService;
@@ -23,6 +26,7 @@ public class AccountRestController {
     public AccountRestController(AccountService accountService) {
         this.accountService = accountService;
     }
+
 
 
     @GetMapping(path="/users")
@@ -86,6 +90,7 @@ public class AccountRestController {
     public void refreshToken(HttpServletRequest req, HttpServletResponse res) throws Exception {
         accountService.refreshToken(res,req);
     }
+
 
     @GetMapping(path ="/profile")
         public User profile(Principal principal){

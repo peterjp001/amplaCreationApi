@@ -1,28 +1,26 @@
 package com.ampla.api.mis.dto;
 
-import com.ampla.api.mis.entities.Employee;
+import com.ampla.api.mis.entities.Course;
 import com.ampla.api.mis.entities.Function;
-import com.ampla.api.security.entities.Role;
-import com.ampla.api.security.entities.User;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.ArrayList;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Data @NoArgsConstructor @AllArgsConstructor
-public class EmployeeUserDTO implements Serializable {
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class EmployeeAsTeacherDTO {
 
     //    EMPLOYEE INFORMATIONS
+
 
     @NotNull(message = "firstName required.")
     private String firstName;
@@ -48,17 +46,9 @@ public class EmployeeUserDTO implements Serializable {
     private String nif;
 
     @NotNull(message = "List Functions required")
-    private List<Function> functions;
+    private Collection<Function> functions;
 
-//    USER INFORMATIONS
+    @NotNull(message = "List Course required")
+    private Collection<Course> courses;
 
-    @NotBlank(message = "Username required.")
-    private String username;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "Password required.")
-    private String password;
-
-    @NotNull(message = "List Roles required")
-    private List<Role> roles;
 }

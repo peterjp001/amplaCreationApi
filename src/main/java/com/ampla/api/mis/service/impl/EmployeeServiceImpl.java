@@ -2,11 +2,14 @@ package com.ampla.api.mis.service.impl;
 
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
 import com.ampla.api.mis.dto.ResponseEmployeeUser;
+import com.ampla.api.mis.entities.Course;
 import com.ampla.api.mis.entities.Employee;
 import com.ampla.api.mis.entities.Function;
+import com.ampla.api.mis.repository.CourseRepository;
 import com.ampla.api.mis.repository.EmployeeRepository;
 import com.ampla.api.mis.repository.FunctionRepository;
 import com.ampla.api.mis.service.EmployeeService;
@@ -30,14 +33,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     protected static final Log logger = LogFactory.getLog(EmployeeServiceImpl.class);
     private final EmployeeRepository emplRepo;
     private final AccountService accountService;
-
     private final FunctionRepository functionRepository;
+    private final CourseRepository courseRepository;
 
 
-    public EmployeeServiceImpl(EmployeeRepository emplRepo, AccountService accountService1, FunctionRepository functionRepository) {
+    public EmployeeServiceImpl(EmployeeRepository emplRepo, AccountService accountService1, FunctionRepository functionRepository, CourseRepository courseRepository) {
         this.emplRepo = emplRepo;
         this.accountService = accountService1;
         this.functionRepository = functionRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -253,7 +257,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }else{
             logger.error("Can't add Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
         }
-        
+
     }
 
 
@@ -273,5 +277,59 @@ public class EmployeeServiceImpl implements EmployeeService {
         }else{
             logger.error("Can't add Role "+func.getFunctionName()+ " added To "+ employee.getFirstName() +" "+ employee.getFirstName());
         }
+    }
+
+    @Override
+    public EmployeeAsTeacherDTO addTeacher(EmployeeAsTeacherDTO eatDTO) throws DataNotFoundException {
+        Employee emp = new Employee();
+
+
+        if(eatDTO.getFunctions().size() >0){
+            for (Function func: eatDTO.getFunctions()) {
+                if(!func.getFunctionName().equals("TEACHER"))
+                    throw new DataNotFoundException("Employee should have TEACHER as a function");
+            }
+            eatDTO.getFunctions().forEach(function -> {
+                Function func = functionRepository.findByFunctionName(function.getFunctionName());
+                emp.getFunctions().add(func);
+            });
+        }else{
+            throw new DataNotFoundException("Function Required");
+        }
+
+        if(eatDTO.getCourses().size() >0){
+            eatDTO.getCourses().forEach(c -> {
+                Course course = courseRepository.findByCourseName(c.getCourseName());
+                emp.getCourse().add(course);
+            });
+
+        }else{
+            throw new DataNotFoundException("Course Required");
+        }
+
+        emp.setCodeEmployee(createCodeEmployee(eatDTO.getFirstName(), eatDTO.getLastName(), eatDTO.getPhone()));
+        emp.setFirstName(eatDTO.getFirstName());
+        emp.setLastName(eatDTO.getLastName());
+        emp.setSexe(eatDTO.getSexe());
+        emp.setEmail(eatDTO.getEmail());
+        Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(eatDTO.getPhone()));
+        if (empPhoneExist.isPresent()){
+            throw new DataAlreadyExistException("Phone "+eatDTO.getPhone()+ " already exist");
+        }
+        emp.setPhone(eatDTO.getPhone());
+        emp.setBirthDate(eatDTO.getBirthDate());
+        emp.setNif(eatDTO.getNif());
+
+        Employee e = saveEmployee(emp);
+
+        eatDTO.setFunctions(e.getFunctions());
+        eatDTO.setCourses(e.getCourse());
+
+        return eatDTO;
+    }
+
+    @Override
+    public List<Employee> listEmployeeByFunctionName(String functionName) {
+        return emplRepo.findEmployeeByFunctionsFunctionName(functionName);
     }
 }

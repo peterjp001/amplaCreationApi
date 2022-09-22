@@ -46,7 +46,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
                 filterChain.doFilter(request,response);
             } catch (TokenExpiredException ex) {
-                logger.info("Token expired!");
+                response.setHeader("error-message",ex.getMessage());
+                response.setStatus(401);
+                logger.error("Token expired!"+ex);
             }
             catch (Exception e){
                 System.out.println("Block filterchain");
