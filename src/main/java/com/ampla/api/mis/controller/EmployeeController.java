@@ -2,6 +2,7 @@ package com.ampla.api.mis.controller;
 
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
 import com.ampla.api.mis.dto.ResponseEmployeeUser;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 
+@CrossOrigin(origins = "*")
 @RestController
 public class EmployeeController {
 
@@ -136,5 +138,18 @@ public class EmployeeController {
     public List<ResponseEmployeeUser> employeeWithUserAccount(){
         return employeeService.allEmployeeWithUserAccount();
     }
+
+    @PostMapping(path = "/teacher")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public EmployeeAsTeacherDTO employeeAsTeacher(@RequestBody @Valid EmployeeAsTeacherDTO employeeAsTeacherDTO) throws DataNotFoundException {
+        return  employeeService.addTeacher(employeeAsTeacherDTO);
+    }
+
+    @GetMapping(path = "/employee/filter")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<Employee> listTeacher(@RequestParam("functionName") String functionName){
+        return employeeService.listEmployeeByFunctionName(functionName);
+    }
+
 
 }

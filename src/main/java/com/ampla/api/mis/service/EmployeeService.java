@@ -2,6 +2,7 @@ package com.ampla.api.mis.service;
 
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
 import com.ampla.api.mis.dto.ResponseEmployeeUser;
@@ -42,5 +43,9 @@ public interface EmployeeService {
     void addFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException;
 
     void removeFunctionToEmployee(Long idEmployee, String functionName) throws DataNotFoundException;
+
+    EmployeeAsTeacherDTO addTeacher(EmployeeAsTeacherDTO eatDTO) throws DataNotFoundException;
+
+    List<Employee> listEmployeeByFunctionName(String functionName);
 
 }

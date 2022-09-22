@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service;
 
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.entities.Course;
 
 import java.util.List;
@@ -14,5 +15,9 @@ public interface CourseService {
 
     List<Course> listCourse();
 
-    Optional<Course> getCourseById(Long id);
+    Course getCourseById(Long id) throws DataNotFoundException;
+
+    Course updateCourse(Long id, Course c) throws DataNotFoundException;
+
+
 }

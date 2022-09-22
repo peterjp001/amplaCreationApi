@@ -18,10 +18,7 @@ import java.util.List;
 public class EmployeeFunctionDTO {
 
 
-    //    Employee Informations 
-    @NotBlank(message = "Code Employee Required.")
-    private String codeEmployee;
-
+    //    Employee Informations
     @NotNull(message = "firstName required.")
     private String firstName;
 

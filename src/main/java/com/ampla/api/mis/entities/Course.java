@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
@@ -18,6 +19,7 @@ public class Course implements Serializable {
     private Long id;
 
     @Column(name="course_name")
+    @NotBlank(message = "courseName required")
     private String courseName;
 
     public Long getId() {
