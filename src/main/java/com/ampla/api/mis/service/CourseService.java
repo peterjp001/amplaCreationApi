@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service;
 
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.entities.Course;
 

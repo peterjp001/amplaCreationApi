@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service.impl;
 
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.job.TestMyJob;
 import com.ampla.api.mis.entities.Course;
@@ -29,6 +30,8 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course SaveCourse(Course course) {
+        Optional<Course> c = Optional.ofNullable(courseRepository.findByCourseName(course.getCourseName()));
+        if ( c.isPresent())  throw new DataAlreadyExistException("Cours "+course.getCourseName()+" existe déjà");
         return courseRepository.save(course);
     }
 
@@ -58,6 +61,8 @@ public class CourseServiceImpl implements CourseService {
 
         return course.get();
     }
+
+
 
     @Override
     public Course updateCourse(Long id, Course c) throws DataNotFoundException {
