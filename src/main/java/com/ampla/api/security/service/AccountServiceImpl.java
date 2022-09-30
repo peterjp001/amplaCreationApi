@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
     public User addNewUser(User appuser) throws DataAlreadyExistException, DataNotFoundException {
         User newUser = new User();
         if (appUserRepository.findByUsername(appuser.getUsername()) != null){
-            throw new DataAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
+            throw new DataAlreadyExistException("Utilisateur "+ appuser.getUsername()+" existe déjà");
         }
 
         newUser.setUsername(appuser.getUsername());
@@ -51,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
         }
         newUser = appUserRepository.save(newUser);
         if(newUser == null){
-            throw new DataAlreadyExistException("User "+ appuser.getUsername()+" Already exist");
+            throw new DataAlreadyExistException("Utilisateur "+ appuser.getUsername()+" existe déjà");
         }
 
         if (appuser.getRoles().size() >0){
@@ -83,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
                 User testUser = appUserRepository.findByUsername(username);
                 if( testUser != null){
                     if(currentUser.getId() != testUser.getId()){
-                        throw new DataAlreadyExistException("User "+ username+" Already exist");
+                        throw new DataAlreadyExistException("Utilisateur "+ username+" existe déjà");
                     }
                 }
                 currentUser.setUsername(username);
@@ -122,12 +122,6 @@ public class AccountServiceImpl implements AccountService {
     public void deleteUser(Long id) {
         appUserRepository.deleteById(id);
     }
-
-
-//    @Override
-//    public User addRoleUser(User user) {
-//        return appUserRepository.save(user);
-//    }
 
 
     @Override
@@ -194,7 +188,7 @@ public class AccountServiceImpl implements AccountService {
 
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis()+120*60*1000))
                         .withIssuer(req.getRequestURL().toString())
                         .withClaim("roles", user.getRoles().stream().map(r->r.getRoleName()).collect(Collectors.toList()))
                         .sign(algo);

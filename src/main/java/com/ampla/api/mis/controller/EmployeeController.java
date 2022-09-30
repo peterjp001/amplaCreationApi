@@ -17,6 +17,10 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,12 +73,15 @@ public class EmployeeController {
 //    GET DATA OF A UNIQUE EMPLOYEE BY HIS ID
     @GetMapping(path = "/employee/{id}")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<Optional<Employee>> getOneEmployee(@PathVariable("id") Long id) throws DataNotFoundException {
+    public ResponseEntity<Employee> getOneEmployee(@PathVariable("id") Long id) throws DataNotFoundException, ParseException {
         Optional<Employee> emp = employeeService.getEmployeeById(id);
         if (emp.isEmpty()) {
             throw new DataNotFoundException("Employee with id " + id + " doesn't exist");
         }
-        return ResponseEntity.ok(emp);
+        Employee employee = emp.get();
+
+
+        return ResponseEntity.ok(employee);
     }
 
 
@@ -96,7 +103,7 @@ public class EmployeeController {
 
 
 //    CREATE A NEW EMPLOYEE FUNCTION
-    @PostMapping(path = "/newfunction")
+    @PostMapping(path = "/function")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public Function newFunction(@RequestBody @Valid Function function) throws DataAlreadyExistException {
         return functionService.addNewFunction(function);

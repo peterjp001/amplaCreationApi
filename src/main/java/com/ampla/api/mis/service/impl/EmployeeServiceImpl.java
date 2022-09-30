@@ -67,9 +67,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee saveEmployee(Employee emp) throws DataAlreadyExistException {
         Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(emp.getPhone()));
+        Optional<Employee> empEmailExist = Optional.ofNullable(emplRepo.findByEmail(emp.getEmail()));
         if (empPhoneExist.isPresent()){
-            throw new DataAlreadyExistException("Phone "+emp.getPhone()+ " already exist");
+            throw new DataAlreadyExistException("Le numéro "+emp.getPhone()+ " existe déjà");
         }
+        if (empEmailExist.isPresent()){
+            throw new DataAlreadyExistException("L'email "+emp.getEmail()+ " existe déjà");
+        }
+
+        Optional<Employee> empNifExist = Optional.ofNullable(emplRepo.findByNif(emp.getNif()));
+        if (empNifExist.isPresent()){
+            throw new DataAlreadyExistException("Le NIF "+emp.getNif()+ " existe déjà");
+        }
+
         emp.setCodeEmployee(createCodeEmployee(emp.getFirstName(), emp.getLastName(), emp.getPhone()));
         return emplRepo.save(emp);
     }
@@ -151,13 +161,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setFirstName(euDTO.getFirstName());
         emp.setLastName(euDTO.getLastName());
         emp.setSexe(euDTO.getSexe());
-        emp.setEmail(euDTO.getEmail());
 
         Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(euDTO.getPhone()));
         if (empPhoneExist.isPresent()){
-            throw new DataAlreadyExistException("Phone "+euDTO.getPhone()+ " already exist");
+            throw new DataAlreadyExistException("Le numéro "+euDTO.getPhone()+ " existe déjà");
         }
 
+        Optional<Employee> empEmailExist = Optional.ofNullable(emplRepo.findByEmail(euDTO.getEmail()));
+        if (empEmailExist.isPresent()){
+            throw new DataAlreadyExistException("L'email "+euDTO.getEmail()+ " existe déjà");
+        }
+
+        Optional<Employee> empNifExist = Optional.ofNullable(emplRepo.findByNif(euDTO.getNif()));
+        if (empNifExist.isPresent()){
+            throw new DataAlreadyExistException("Le NIF "+euDTO.getNif()+ " existe déjà");
+        }
+
+        emp.setEmail(euDTO.getEmail());
         emp.setPhone(euDTO.getPhone());
         emp.setBirthDate(euDTO.getBirthDate());
         emp.setNif(euDTO.getNif());
@@ -188,11 +208,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setFirstName(euDTO.getFirstName());
         emp.setLastName(euDTO.getLastName());
         emp.setSexe(euDTO.getSexe());
-        emp.setEmail(euDTO.getEmail());
+
         Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(euDTO.getPhone()));
         if (empPhoneExist.isPresent()){
             throw new DataAlreadyExistException("Phone "+euDTO.getPhone()+ " already exist");
         }
+
+        Optional<Employee> empEmailExist = Optional.ofNullable(emplRepo.findByEmail(euDTO.getEmail()));
+        if (empEmailExist.isPresent()){
+            throw new DataAlreadyExistException("L'email "+euDTO.getEmail()+ " existe déjà");
+        }
+
+        Optional<Employee> empNifExist = Optional.ofNullable(emplRepo.findByNif(euDTO.getNif()));
+        if (empNifExist.isPresent()){
+            throw new DataAlreadyExistException("Le NIF "+euDTO.getNif()+ " existe déjà");
+        }
+
+        emp.setEmail(euDTO.getEmail());
         emp.setPhone(euDTO.getPhone());
         emp.setBirthDate(euDTO.getBirthDate());
         emp.setNif(euDTO.getNif());
