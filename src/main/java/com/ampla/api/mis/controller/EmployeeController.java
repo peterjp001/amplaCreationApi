@@ -55,10 +55,10 @@ public class EmployeeController {
     }
 
 //    ADD USER TO AN EXISTING EMPLOYEE
-    @PostMapping(path = "/usertoemployee/{id}")
+    @PostMapping(path = "/user/{codeEmployee}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<ResponseEmployeeUser> newUserToEmployee(@RequestBody @Valid User user, @PathVariable("id") Long idEmployee) throws DataNotFoundException {
-        return ResponseEntity.ok(employeeService.userToExistingEmployee(user,idEmployee));
+    public ResponseEntity<User> newUserToEmployee(@RequestBody @Valid User user, @PathVariable("codeEmployee") String codeEmployee) throws DataNotFoundException {
+        return ResponseEntity.ok(employeeService.userToExistingEmployee(user,codeEmployee));
     }
 
 
@@ -146,7 +146,7 @@ public class EmployeeController {
         return employeeService.allEmployeeWithUserAccount();
     }
 
-    @PostMapping(path = "/teacher")
+    @PostMapping(path = "/employeeasteacher")
     @PostAuthorize("hasAnyAuthority('USER')")
     public EmployeeAsTeacherDTO employeeAsTeacher(@RequestBody @Valid EmployeeAsTeacherDTO employeeAsTeacherDTO) throws DataNotFoundException {
         return  employeeService.addTeacher(employeeAsTeacherDTO);
@@ -156,6 +156,12 @@ public class EmployeeController {
     @PostAuthorize("hasAnyAuthority('USER')")
     public List<Employee> listTeacher(@RequestParam("functionName") String functionName){
         return employeeService.listEmployeeByFunctionName(functionName);
+    }
+
+    @GetMapping(path = "/teacher/{courseName}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<Employee> listTeacherByCourse(@PathVariable("courseName") String courseName){
+        return employeeService.listEmployeeByCourseName(courseName);
     }
 
 

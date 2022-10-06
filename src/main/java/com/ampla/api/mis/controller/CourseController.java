@@ -43,16 +43,19 @@ public class CourseController {
         return courseService.getCourseById(id);
     }
 
-    @PostMapping(path="/linkCourseToEmployee")
-    @PostAuthorize("hasAnyAuthority('ADMIN')")
-    public void courseToEmployee(@RequestBody CourseEmployeeDTO courseEmployeeDTO ){
-        courseService.linkEmployeeToCourse(courseEmployeeDTO.getIdEmployee(),courseEmployeeDTO.getIdCourse());
-    }
 
     @PutMapping(path="/course/{id}")
     @PostAuthorize("hasAnyAuthority('ADMIN')")
     public Course updateCource(@PathVariable("id") Long id, @RequestBody Course c) throws DataNotFoundException {
         return courseService.updateCourse(id,c);
+    }
+
+    @PostMapping(path="/add/course/{courseName}/teacher/{teacherName}")
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
+    public void courseToEmployee(@PathVariable("courseName") String courseName, @PathVariable("teacherName") String teacherName ){
+//        courseService.linkEmployeeToCourse(courseEmployeeDTO.getIdEmployee(),courseEmployeeDTO.getIdCourse());
+
+
     }
 
 

@@ -21,7 +21,7 @@ public interface EmployeeService {
     Boolean testPhone(String phone);
     Employee saveEmployee(Employee emp) throws DataAlreadyExistException;
 
-    void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException;
+//    void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException;
 
     List<Employee> listEmployee();
 
@@ -35,7 +35,7 @@ public interface EmployeeService {
 
     ResponseEmployeeUser newEmployeeWithAccount(EmployeeUserDTO euDTO) throws DataAlreadyExistException, DataNotFoundException;
 
-    ResponseEmployeeUser userToExistingEmployee(User user, Long idEmployee) throws DataNotFoundException;
+    User userToExistingEmployee(User user, String codeEmployee) throws DataNotFoundException;
 
     List<ResponseEmployeeUser> allEmployeeWithUserAccount();
 
@@ -47,5 +47,9 @@ public interface EmployeeService {
     EmployeeAsTeacherDTO addTeacher(EmployeeAsTeacherDTO eatDTO) throws DataNotFoundException;
 
     List<Employee> listEmployeeByFunctionName(String functionName);
+
+    List<Employee> listEmployeeByCourseName(String courseName);
+
+
 
 }

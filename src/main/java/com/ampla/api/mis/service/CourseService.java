@@ -12,7 +12,7 @@ public interface CourseService {
     Course SaveCourse(Course course);
 
 
-    void linkEmployeeToCourse(Long idEmployee, Long idCourse);
+    void addCourseToTeacher(Long idEmployee, Long idCourse);
 
     List<Course> listCourse();
 

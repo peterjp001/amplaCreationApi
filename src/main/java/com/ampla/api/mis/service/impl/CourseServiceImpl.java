@@ -31,12 +31,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course SaveCourse(Course course) {
         Optional<Course> c = Optional.ofNullable(courseRepository.findByCourseName(course.getCourseName()));
-        if ( c.isPresent())  throw new DataAlreadyExistException("Cours "+course.getCourseName()+" existe déjà");
+        if ( c.isPresent())  throw new DataAlreadyExistException("Le cours "+course.getCourseName()+" existe déjà");
         return courseRepository.save(course);
     }
 
     @Override
-    public void linkEmployeeToCourse(Long idEmployee, Long idCourse) {
+    public void addCourseToTeacher(Long idEmployee, Long idCourse) {
+
         Optional<Employee> emp = emplRepo.findById(idEmployee);
         Optional<Course> course = courseRepository.findById(idCourse);
         if (emp.isPresent() && course.isPresent()) {

@@ -84,18 +84,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         return emplRepo.save(emp);
     }
 
-    @Override
-    public void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException {
-        Optional<User> user = accountService.getUserById(idUser);
-        Optional<Employee> emp = emplRepo.findById(idEmployer);
-        if (user.isPresent() && emp.isPresent()) {
-            User u = user.get();
-            Employee e = emp.get();
-            e.setUser(u);
-            System.out.println(u.getEmployee());
-            emplRepo.save(e);
-        }
-    }
+//    @Override
+//    public void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException {
+//        Optional<User> user = accountService.getUserById(idUser);
+//        Optional<Employee> emp = emplRepo.findById(idEmployer);
+//        if (user.isPresent() && emp.isPresent()) {
+//            User u = user.get();
+//            Employee e = emp.get();
+//            e.setUser(u);
+//            System.out.println(u.getEmployee());
+//            emplRepo.save(e);
+//        }
+//    }
 
 
     @Override
@@ -241,17 +241,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEmployeeUser userToExistingEmployee(User user, Long idEmployee) throws DataNotFoundException {
+    public User userToExistingEmployee(User user, String codeEmployee) throws DataNotFoundException {
 
-        Optional<Employee> emp = getEmployeeById(idEmployee);
-        if (emp.isEmpty()) throw new DataNotFoundException("Employee with id "+idEmployee+" not exist");
+        Optional<Employee> emp = Optional.ofNullable(emplRepo.findEmployeeByCodeEmployee(codeEmployee));
+        if (emp.isEmpty()) throw new DataNotFoundException("L'employé avec le code "+codeEmployee+" n'existe pas");
         Employee employee = emp.get();
         if(employee.getUser() != null)
-            throw new DataAlreadyExistException("An user account already exist for employee with id " + idEmployee);
+            throw new DataAlreadyExistException("L'employé avec le code " + codeEmployee + " a déjà un compte");
         User newUser = accountService.addNewUser(user);
         employee.setUser(newUser);
         Employee empResult = emplRepo.save(employee);
-        return new ResponseEmployeeUser(empResult,newUser);
+        return  newUser;
     }
 
     @Override
@@ -318,7 +318,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if(eatDTO.getFunctions().size() >0){
             for (Function func: eatDTO.getFunctions()) {
-                if(!func.getFunctionName().equals("TEACHER"))
+                if(!func.getFunctionName().equals("Professeur"))
                     throw new DataNotFoundException("Employee should have TEACHER as a function");
             }
             eatDTO.getFunctions().forEach(function -> {
@@ -346,7 +346,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setEmail(eatDTO.getEmail());
         Optional<Employee> empPhoneExist = Optional.ofNullable(getByPhone(eatDTO.getPhone()));
         if (empPhoneExist.isPresent()){
-            throw new DataAlreadyExistException("Phone "+eatDTO.getPhone()+ " already exist");
+            throw new DataAlreadyExistException("Le num2ro "+eatDTO.getPhone()+ " existe déjà");
         }
         emp.setPhone(eatDTO.getPhone());
         emp.setBirthDate(eatDTO.getBirthDate());
@@ -363,5 +363,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> listEmployeeByFunctionName(String functionName) {
         return emplRepo.findEmployeeByFunctionsFunctionName(functionName);
+    }
+
+    @Override
+    public List<Employee> listEmployeeByCourseName(String courseName) {
+        return emplRepo.findEmployeeByCourseCourseName(courseName);
     }
 }
