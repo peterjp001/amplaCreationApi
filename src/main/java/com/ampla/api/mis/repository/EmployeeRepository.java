@@ -16,6 +16,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByNif(String nif);
     Employee findEmployeeByUser(User user);
 
+    Employee findEmployeeByCodeEmployee(String codeEmployee);
+
     List<Employee> findEmployeeByFunctionsFunctionName(String functionName);
 
+    List<Employee> findEmployeeByCourseCourseName(String courseName);
 }

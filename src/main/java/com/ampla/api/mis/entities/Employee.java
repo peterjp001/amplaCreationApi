@@ -1,5 +1,6 @@
 package com.ampla.api.mis.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,7 @@ public class Employee implements Serializable {
     @Column(name = "phone")
     private String phone;
 
+    @JsonFormat(pattern = "yyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_birth")
     private Date birthDate;
 
