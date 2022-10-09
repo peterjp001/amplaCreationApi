@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @NoArgsConstructor
@@ -16,7 +17,8 @@ public class Grade {
     private Long id;
 
     @Column(name = "grade_name")
-    private String GradeName;
+    @NotBlank(message = "GradeName is required!")
+    private String gradeName;
 
     public Long getId() {
         return id;
@@ -27,10 +29,10 @@ public class Grade {
     }
 
     public String getGradeName() {
-        return GradeName;
+        return gradeName;
     }
 
     public void setGradeName(String gradeName) {
-        GradeName = gradeName;
+        this.gradeName = gradeName;
     }
 }
