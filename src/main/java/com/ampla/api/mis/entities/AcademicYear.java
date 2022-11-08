@@ -4,7 +4,7 @@ package com.ampla.api.mis.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,10 +17,12 @@ public class AcademicYear implements Serializable {
     private Long id;
 
     @JsonFormat(pattern = "yyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @NotNull(message = "can not be null")
     @Column(name = "date_start")
     private Date dateStart;
 
     @JsonFormat(pattern = "yyy-MM-dd", shape = JsonFormat.Shape.STRING)
+    @NotNull(message = "can not be null")
     @Column(name = "date_end")
     private Date dateEnd;
 

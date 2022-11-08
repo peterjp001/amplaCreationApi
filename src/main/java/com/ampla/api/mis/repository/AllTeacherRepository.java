@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface AllTeacherRepository extends ReadOnlyRepository<AllTeacher,Long> {
-
-
-}
+//@Repository
+//public interface AllTeacherRepository extends ReadOnlyRepository<AllTeacher,Long> {
+//
+//
+//}
