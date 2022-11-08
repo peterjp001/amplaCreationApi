@@ -10,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
-@Entity
-@Immutable
+
 @Data @NoArgsConstructor @AllArgsConstructor
 public class AllTeacher {
 
