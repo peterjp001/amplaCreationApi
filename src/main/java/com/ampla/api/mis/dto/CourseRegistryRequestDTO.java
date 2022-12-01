@@ -17,6 +17,8 @@ public class CourseRegistryRequestDTO {
 //    @NotBlank(message = "Required")
     private String codeEmployee;
 
+    private String day;
+
 //    @NotBlank(message = "Required")
     private LocalTime timeStart;
 

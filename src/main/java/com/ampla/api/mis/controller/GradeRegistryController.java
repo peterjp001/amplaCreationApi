@@ -35,10 +35,22 @@ public class GradeRegistryController {
         return gradeRegistryService.getGradeRegistryById(id);
     }
 
+    @GetMapping(path = "/gradeRegistry/{courseName}/{codeEmployee}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public GradeRegistry gradeRegistryByCourseNameAndCodeEmployee(@PathVariable("courseName") String courseName, @PathVariable("codeEmployee") String codeEmployee) throws DataNotFoundException {
+        return gradeRegistryService.getByCourseNameAndCodeEmployee(courseName, codeEmployee);
+    }
+
     @PutMapping(path = "/gradeRegistry/{id}")
     @PostAuthorize("hasAnyAuthority('USER')")
     public GradeRegistry updateGrade(@PathVariable("id") Long id, @RequestBody CourseRegistryRequestDTO grade) throws DataAlreadyExistException, DataNotFoundException {
         return gradeRegistryService.updateGradeRegistry(id,grade);
+    }
+
+    @DeleteMapping(path = "/gradeRegistry/{id}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public void deleteGradeRegistry(@PathVariable("id") Long id)  {
+         gradeRegistryService.deleteGradeRegistry(id);
     }
 
 }

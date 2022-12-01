@@ -18,6 +18,9 @@ public class GradeRegistry implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="day")
+    private String day;
+
     @Column(name = "time_start")
     private LocalTime timeStart;
 
@@ -29,16 +32,20 @@ public class GradeRegistry implements Serializable {
 
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne
     @JoinColumn(name = "course_id")
+//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Course course;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "employee_id")
+//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Employee employee;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "academic_year_id")
+//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private AcademicYear academicYear;
 
 
@@ -48,6 +55,14 @@ public class GradeRegistry implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
     }
 
     public Long getGradeId() {

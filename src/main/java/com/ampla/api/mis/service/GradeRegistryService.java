@@ -21,4 +21,8 @@ public interface GradeRegistryService {
 
     GradeRegistry updateGradeRegistry(Long id, CourseRegistryRequestDTO gradeRegistry) throws DataNotFoundException;
 
+    GradeRegistry getByCourseNameAndCodeEmployee(String courseName, String codeEmployee);
+
+    void deleteGradeRegistry(Long id);
+
 }

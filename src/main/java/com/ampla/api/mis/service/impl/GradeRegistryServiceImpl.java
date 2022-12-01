@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service.impl;
 
+import com.ampla.api.exception.DataAlreadyExistException;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.CourseRegistryRequestDTO;
 import com.ampla.api.mis.dto.GradeRegistryRequestDTO;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GradeRegistryServiceImpl implements GradeRegistryService {
@@ -44,6 +46,8 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
 
         gradeRegistry.getListCourses().forEach(courseRegistry->{
 
+            Optional<GradeRegistry> grExist = Optional.ofNullable(getByCourseNameAndCodeEmployee(courseRegistry.getCourseName(), courseRegistry.getCodeEmployee()));
+            if(grExist.isPresent()) throw new DataAlreadyExistException("Cours '"+ courseRegistry.getCourseName()+"' avec le professeur "+courseRegistry.getCodeEmployee()+" existe déjà");
             GradeRegistry gr = new GradeRegistry();
             gr.setGradeId(grade.getId());
 
@@ -58,6 +62,8 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
             } catch (DataNotFoundException e) {
                 throw new RuntimeException(e);
             }
+
+            gr.setDay(courseRegistry.getDay());
 
             gr.setTimeStart(courseRegistry.getTimeStart());
             gr.setTimeEnd(courseRegistry.getTimeEnd());
@@ -91,6 +97,11 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
         GradeRegistry gr = registryRepository.findById(id).orElseThrow(
                 ()-> new DataNotFoundException("Grade Registry with Id "+id+" not exist!"));
 
+        Optional<GradeRegistry> grExist = Optional.ofNullable(getByCourseNameAndCodeEmployee(gradeRegistry.getCourseName(), gradeRegistry.getCodeEmployee()));
+        if(grExist.isPresent()) throw new DataAlreadyExistException("Cours '"+ gradeRegistry.getCourseName()+"' avec le professeur "+gradeRegistry.getCodeEmployee()+" existe déjà");
+
+
+
         if(gradeRegistry != null){
             if(gradeRegistry.getCodeEmployee() != null){
                 Employee employee= employeeService.getEmployeeByCode(gradeRegistry.getCodeEmployee());
@@ -99,6 +110,10 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
             if(gradeRegistry.getCourseName() != null){
                 Course course = courseService.getCourseByName(gradeRegistry.getCourseName());
                 gr.setCourse(course);
+            }
+
+            if(gradeRegistry.getDay() != null){
+                gr.setDay(gradeRegistry.getDay());
             }
             if(gradeRegistry.getTimeStart() != null){
                 gr.setTimeStart(gradeRegistry.getTimeStart());
@@ -109,4 +124,17 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
         }
         return registryRepository.save(gr);
     }
+
+
+    @Override
+    public GradeRegistry getByCourseNameAndCodeEmployee(String courseName, String codeEmployee) {
+        return registryRepository.findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployee(courseName,codeEmployee);
+    }
+
+    @Override
+    public void deleteGradeRegistry(Long id) {
+        registryRepository.deleteById(id);
+    }
+
+
 }

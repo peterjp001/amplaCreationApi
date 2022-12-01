@@ -9,4 +9,11 @@ public interface GradeRegistryRepository extends JpaRepository<GradeRegistry, Lo
     GradeRegistry findAllByGradeId(Long id);
 
     List<GradeRegistry> findGradeRegistriesByGradeId(Long id);
+
+    GradeRegistry findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployee(String courseName, String codeEmployee);
+
+
+
+//    @Query(value = "DELETE FROM grade_registry WHERE id = :id ", nativeQuery = true)
+//    void deleteGradeRegistriesByIdNQ(@Param("id") Long id);
 }
