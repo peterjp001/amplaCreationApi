@@ -1,14 +1,12 @@
 package com.ampla.api.mis.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,9 +21,11 @@ public class Grade implements Serializable {
     @NotBlank(message = "GradeName is required!")
     private String gradeName;
 
-    @JsonIgnore
-    @OneToMany(mappedBy="grade",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Collection<GradeRegistry> gradeRegistries = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "grade_id")
+    private List<GradeRegistry> gradeRegistries;
+
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class Grade implements Serializable {
         this.gradeName = gradeName;
     }
 
-    public Collection<GradeRegistry> getGradeRegistries() {
+    public List<GradeRegistry> getGradeRegistries() {
         return gradeRegistries;
     }
 
-    public void setGradeRegistries(Collection<GradeRegistry> gradeRegistries) {
+    public void setGradeRegistries(List<GradeRegistry> gradeRegistries) {
         this.gradeRegistries = gradeRegistries;
     }
 }

@@ -51,4 +51,12 @@ public class AcademicYearServiceImpl implements AcademicYearService {
 
         return academicYearRepository.save(acy);
     }
+
+    @Override
+    public AcademicYear getById(Long id) throws DataNotFoundException {
+        Optional<AcademicYear> ay = academicYearRepository.findById(id);
+        if(ay.isEmpty()) { throw  new DataNotFoundException("Academic year with id "+ id+" doesn't exist!");
+        }
+        return academicYearRepository.findAcademicYearById(id);
+    }
 }

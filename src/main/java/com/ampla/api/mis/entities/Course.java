@@ -1,7 +1,6 @@
 package com.ampla.api.mis.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -21,6 +20,8 @@ public class Course implements Serializable {
     @Column(name="course_name")
     @NotBlank(message = "courseName required")
     private String courseName;
+
+
 
     public Long getId() {
         return id;

@@ -15,4 +15,6 @@ public interface AcademicYearRepository extends JpaRepository<AcademicYear,Long>
     List<AcademicYear> findAllOrderByStatusAsc();
     AcademicYear findAcademicYearByStatus(String status);
     AcademicYear findAcademicYearByDateStartAndDateEnd(Date dateStart, Date dateEnd);
+
+    AcademicYear findAcademicYearById(Long id);
 }

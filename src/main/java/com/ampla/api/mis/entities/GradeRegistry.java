@@ -3,10 +3,10 @@ package com.ampla.api.mis.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
@@ -18,24 +18,29 @@ public class GradeRegistry implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name="grade_id" )
-    private Grade grade;
-
-    @Column(name = "course_id")
-    private Long courseId;
-
-    @Column(name = "employee_id")
-    private Long employeeId;
-
     @Column(name = "time_start")
-    private DateTime timeStart;
+    private LocalTime timeStart;
 
     @Column(name = "time_end")
-    private DateTime timeEnd;
+    private LocalTime timeEnd;
 
-    @Column(name = "academic_year_id")
-    private Long academicYearId;
+    @Column(name = "grade_id")
+    private Long gradeId;
+
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "academic_year_id")
+    private AcademicYear academicYear;
+
 
     public Long getId() {
         return id;
@@ -45,51 +50,52 @@ public class GradeRegistry implements Serializable {
         this.id = id;
     }
 
-    public Grade getGrade() {
-        return grade;
+    public Long getGradeId() {
+        return gradeId;
     }
 
-    public void setGrade(Grade grade) {
-        this.grade = grade;
+    public void setGradeId(Long gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public Long getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
-    }
-
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public DateTime getTimeStart() {
+    public LocalTime getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(DateTime timeStart) {
+    public void setTimeStart(LocalTime timeStart) {
         this.timeStart = timeStart;
     }
 
-    public DateTime getTimeEnd() {
+    public LocalTime getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(DateTime timeEnd) {
+    public void setTimeEnd(LocalTime timeEnd) {
         this.timeEnd = timeEnd;
     }
 
-    public Long getAcademicYearId() {
-        return academicYearId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setAcademicYearId(Long academicYearId) {
-        this.academicYearId = academicYearId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public AcademicYear getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(AcademicYear academicYear) {
+        this.academicYear = academicYear;
+    }
+
 }

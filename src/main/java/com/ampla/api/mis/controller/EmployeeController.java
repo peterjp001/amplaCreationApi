@@ -1,7 +1,7 @@
 package com.ampla.api.mis.controller;
 
-import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
@@ -17,10 +17,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -160,8 +157,14 @@ public class EmployeeController {
 
     @GetMapping(path = "/teacher/{courseName}")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public List<Employee> listTeacherByCourse(@PathVariable("courseName") String courseName){
+    public List<Employee> listTeacherByCourseName(@PathVariable("courseName") String courseName){
         return employeeService.listEmployeeByCourseName(courseName);
+    }
+
+    @GetMapping(path = "/teacher/course/{id}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<Employee> listTeacherByCourseId(@PathVariable("id") Long id){
+        return employeeService.listEmployeeByCourseId(id);
     }
 
 

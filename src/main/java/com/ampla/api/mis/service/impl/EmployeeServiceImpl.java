@@ -250,7 +250,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new DataAlreadyExistException("L'employé avec le code " + codeEmployee + " a déjà un compte");
         User newUser = accountService.addNewUser(user);
         employee.setUser(newUser);
-        Employee empResult = emplRepo.save(employee);
+          emplRepo.save(employee);
         return  newUser;
     }
 
@@ -368,5 +368,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> listEmployeeByCourseName(String courseName) {
         return emplRepo.findEmployeeByCourseCourseName(courseName);
+    }
+
+    @Override
+    public Employee getEmployeeByCode(String codeEmployee) throws DataNotFoundException {
+        return Optional.ofNullable(emplRepo.findEmployeeByCodeEmployee(codeEmployee)).orElseThrow(
+                ()->new DataNotFoundException("Employee with Code "+codeEmployee+" not exist!")
+        );
+    }
+
+    @Override
+    public List<Employee> listEmployeeByCourseId(Long id) {
+        return emplRepo.findEmployeeByCourseId(id);
     }
 }

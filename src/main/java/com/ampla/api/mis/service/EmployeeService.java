@@ -1,7 +1,7 @@
 package com.ampla.api.mis.service;
 
-import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
@@ -51,5 +51,7 @@ public interface EmployeeService {
     List<Employee> listEmployeeByCourseName(String courseName);
 
 
+    Employee getEmployeeByCode(String codeEmployee) throws DataNotFoundException;
 
+    List<Employee> listEmployeeByCourseId(Long id);
 }

@@ -3,7 +3,6 @@ package com.ampla.api.mis.repository;
 import com.ampla.api.mis.entities.Employee;
 import com.ampla.api.security.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +20,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findEmployeeByFunctionsFunctionName(String functionName);
 
     List<Employee> findEmployeeByCourseCourseName(String courseName);
+
+    List<Employee> findEmployeeByCourseId(Long id);
 }

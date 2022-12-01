@@ -20,7 +20,7 @@ public class AcademicYearController {
     }
 
     @PostMapping(path = "/academicyear")
-    @PostAuthorize("hasAnyAuthority('ADMIN')")********
+    @PostAuthorize("hasAnyAuthority('ADMIN')")
     public AcademicYear newAcademicYear(@RequestBody AcademicYear academicYear){
         return academicYearService.saveAcademicYear(academicYear);
     }
