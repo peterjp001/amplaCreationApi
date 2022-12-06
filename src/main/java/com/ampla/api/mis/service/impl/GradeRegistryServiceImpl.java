@@ -49,7 +49,7 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
             Optional<GradeRegistry> grExist = Optional.ofNullable(getByCourseNameAndCodeEmployee(courseRegistry.getCourseName(), courseRegistry.getCodeEmployee()));
             if(grExist.isPresent()) throw new DataAlreadyExistException("Cours '"+ courseRegistry.getCourseName()+"' avec le professeur "+courseRegistry.getCodeEmployee()+" existe déjà");
             GradeRegistry gr = new GradeRegistry();
-            gr.setGradeId(grade.getId());
+            gr.setGrade(grade);
 
             Course course = courseService.getCourseByName(courseRegistry.getCourseName());
             gr.setCourse(course);

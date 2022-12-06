@@ -1,5 +1,6 @@
 package com.ampla.api.mis.service;
 
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.entities.Student;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.Optional;
 
 public interface StudentService {
 
-    Student saveStudent(Student student);
+    Student saveStudent(Student student) throws DataNotFoundException;
 
     List<Student> listStudent();
 

@@ -2,6 +2,7 @@ package com.ampla.api.mis.entities;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class GradeRegistry implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -27,90 +29,23 @@ public class GradeRegistry implements Serializable {
     @Column(name = "time_end")
     private LocalTime timeEnd;
 
-    @Column(name = "grade_id")
-    private Long gradeId;
-
-
-
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    private Grade grade;
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Course course;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Employee employee;
 
     @ManyToOne
     @JoinColumn(name = "academic_year_id")
-//    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private AcademicYear academicYear;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public Long getGradeId() {
-        return gradeId;
-    }
-
-    public void setGradeId(Long gradeId) {
-        this.gradeId = gradeId;
-    }
-
-    public LocalTime getTimeStart() {
-        return timeStart;
-    }
-
-    public void setTimeStart(LocalTime timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public LocalTime getTimeEnd() {
-        return timeEnd;
-    }
-
-    public void setTimeEnd(LocalTime timeEnd) {
-        this.timeEnd = timeEnd;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public AcademicYear getAcademicYear() {
-        return academicYear;
-    }
-
-    public void setAcademicYear(AcademicYear academicYear) {
-        this.academicYear = academicYear;
-    }
-
+ 
+  
+ 
 }

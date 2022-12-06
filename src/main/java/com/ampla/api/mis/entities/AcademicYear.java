@@ -2,13 +2,21 @@ package com.ampla.api.mis.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AcademicYear implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -29,47 +37,9 @@ public class AcademicYear implements Serializable {
     @Column(name = "status")
     private String status;
 
-
-    public AcademicYear() {
-    }
-
-    public AcademicYear(Long id, Date dateStart, Date dateEnd, String status) {
-        this.id = id;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
-        this.status = status;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "academicYear")
+    private List<StudentRegister> register;
 
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getDateStart() {
-        return dateStart;
-    }
-
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public Date getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 }
