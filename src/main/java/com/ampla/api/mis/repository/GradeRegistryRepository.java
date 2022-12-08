@@ -3,14 +3,18 @@ package com.ampla.api.mis.repository;
 import com.ampla.api.mis.entities.GradeRegistry;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface GradeRegistryRepository extends JpaRepository<GradeRegistry, Long> {
-    GradeRegistry findAllByGradeId(Long id);
+
+    List<GradeRegistry> findAllByGradeIdAndAcademicYearId(Long gradeId, Long academicYearId);
+
 
     List<GradeRegistry> findGradeRegistriesByGradeId(Long id);
 
-    GradeRegistry findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployee(String courseName, String codeEmployee);
+    GradeRegistry findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployeeAndAcademicYearIdAndTimeStartAndTimeEndAndDay
+            (String courseName, String codeEmployee, Long academicYearId, LocalTime timeStart, LocalTime timeEnd, String day);
 
 
 

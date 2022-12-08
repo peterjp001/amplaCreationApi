@@ -11,6 +11,7 @@ import com.ampla.api.mis.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +46,16 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
         AcademicYear academicYear = academicYearService.getById(gradeRegistry.getAcademicYearId());
 
         gradeRegistry.getListCourses().forEach(courseRegistry->{
-
-            Optional<GradeRegistry> grExist = Optional.ofNullable(getByCourseNameAndCodeEmployee(courseRegistry.getCourseName(), courseRegistry.getCodeEmployee()));
-            if(grExist.isPresent()) throw new DataAlreadyExistException("Cours '"+ courseRegistry.getCourseName()+"' avec le professeur "+courseRegistry.getCodeEmployee()+" existe déjà");
+            Optional<GradeRegistry> grExist = Optional.ofNullable(
+                    checkIsGradeRegistryDataExist(
+                            courseRegistry.getCourseName(),
+                            courseRegistry.getCodeEmployee(),
+                            gradeRegistry.getAcademicYearId(),
+                            courseRegistry.getTimeStart(),
+                            courseRegistry.getTimeEnd(),
+                            courseRegistry.getDay())
+            );
+            if(grExist.isPresent()) throw new DataAlreadyExistException("La planification pour ce cours existe déjà");
             GradeRegistry gr = new GradeRegistry();
             gr.setGrade(grade);
 
@@ -97,10 +105,15 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
         GradeRegistry gr = registryRepository.findById(id).orElseThrow(
                 ()-> new DataNotFoundException("Grade Registry with Id "+id+" not exist!"));
 
-        Optional<GradeRegistry> grExist = Optional.ofNullable(getByCourseNameAndCodeEmployee(gradeRegistry.getCourseName(), gradeRegistry.getCodeEmployee()));
-        if(grExist.isPresent()) throw new DataAlreadyExistException("Cours '"+ gradeRegistry.getCourseName()+"' avec le professeur "+gradeRegistry.getCodeEmployee()+" existe déjà");
-
-
+        Optional<GradeRegistry> grExist = Optional.ofNullable(checkIsGradeRegistryDataExist(
+                gradeRegistry.getCourseName(),
+                gradeRegistry.getCodeEmployee(),
+                gradeRegistry.getAcademicYearId(),
+                gradeRegistry.getTimeStart(),
+                gradeRegistry.getTimeEnd(),
+                gradeRegistry.getDay())
+        );
+        if(grExist.isPresent()) throw new DataAlreadyExistException("La planification pour ce cours existe déjà");
 
         if(gradeRegistry != null){
             if(gradeRegistry.getCodeEmployee() != null){
@@ -127,9 +140,16 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
 
 
     @Override
-    public GradeRegistry getByCourseNameAndCodeEmployee(String courseName, String codeEmployee) {
-        return registryRepository.findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployee(courseName,codeEmployee);
+    public GradeRegistry checkIsGradeRegistryDataExist(String courseName, String codeEmployee, Long academicYearId, LocalTime timeStart, LocalTime timeEnd, String day) {
+        return registryRepository.findGradeRegistriesByCourseCourseNameAndEmployeeCodeEmployeeAndAcademicYearIdAndTimeStartAndTimeEndAndDay
+                (courseName, codeEmployee, academicYearId, timeStart, timeEnd, day);
     }
+
+    @Override
+    public List<GradeRegistry> getByGradeIdAndAcademicYear(Long gradeId, Long academicYearId) {
+        return registryRepository.findAllByGradeIdAndAcademicYearId(gradeId,academicYearId);
+    }
+
 
     @Override
     public void deleteGradeRegistry(Long id) {

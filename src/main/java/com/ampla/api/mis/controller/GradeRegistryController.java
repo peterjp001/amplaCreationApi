@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class GradeRegistryController {
@@ -35,11 +36,11 @@ public class GradeRegistryController {
         return gradeRegistryService.getGradeRegistryById(id);
     }
 
-    @GetMapping(path = "/gradeRegistry/{courseName}/{codeEmployee}")
-    @PostAuthorize("hasAnyAuthority('USER')")
-    public GradeRegistry gradeRegistryByCourseNameAndCodeEmployee(@PathVariable("courseName") String courseName, @PathVariable("codeEmployee") String codeEmployee) throws DataNotFoundException {
-        return gradeRegistryService.getByCourseNameAndCodeEmployee(courseName, codeEmployee);
-    }
+//    @GetMapping(path = "/gradeRegistry/{courseName}/{codeEmployee}")
+//    @PostAuthorize("hasAnyAuthority('USER')")
+//    public GradeRegistry gradeRegistryByCourseNameAndCodeEmployee(@PathVariable("courseName") String courseName, @PathVariable("codeEmployee") String codeEmployee) throws DataNotFoundException {
+//        return gradeRegistryService.getByCourseNameAndCodeEmployee(courseName, codeEmployee);
+//    }
 
     @PutMapping(path = "/gradeRegistry/{id}")
     @PostAuthorize("hasAnyAuthority('USER')")
@@ -51,6 +52,12 @@ public class GradeRegistryController {
     @PostAuthorize("hasAnyAuthority('USER')")
     public void deleteGradeRegistry(@PathVariable("id") Long id)  {
          gradeRegistryService.deleteGradeRegistry(id);
+    }
+
+    @GetMapping(path = "/gradeRegistry/grade/{gradeId}/academicyear/{academicYearId}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<GradeRegistry> gradeRegistryByGradeIdAndAcademicYearId(@PathVariable("gradeId") Long gradeId, @PathVariable("academicYearId") Long academicYearId)  {
+        return gradeRegistryService.getByGradeIdAndAcademicYear(gradeId, academicYearId);
     }
 
 }

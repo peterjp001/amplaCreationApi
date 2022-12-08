@@ -33,7 +33,7 @@ public class StudentResponseDTO {
     public static StudentResponseDTO fromDto(StudentRegister register){
 
         return StudentResponseDTO.builder()
-                .student(register.getStudent())
+//                .student(register.getStudent())
                 .registerId(register.getId())
                 .lastGrade(register.getLastGrade())
                 .lastSchool(register.getLastSchool())

@@ -1,6 +1,7 @@
 package com.ampla.api.mis.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class StudentRegister {
     @Column(name = "last_grade")
     private String lastGrade;
 
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "student_id")
     private Student student;

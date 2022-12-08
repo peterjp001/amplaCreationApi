@@ -3,6 +3,7 @@ package com.ampla.api.mis.controller;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.StudentRequestDTO;
 import com.ampla.api.mis.dto.StudentResponseDTO;
+import com.ampla.api.mis.entities.StudentRegister;
 import com.ampla.api.mis.service.StudentRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -33,10 +34,26 @@ public class StudentRegisterController {
         return studentRegisterService.listAllStudentRegisterByAY(id);
     }
 
-    @GetMapping(path = "/students/register/student/{studentId}/academicyear/{ayId}")
+    @GetMapping(path = "/students/register/{registerId}/academicyear/{ayId}")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public StudentResponseDTO getStudent(@PathVariable("studentId") Long studentId, @PathVariable("ayId") Long ayId){
-        return studentRegisterService.getStudentByIdAndAcademicYear(studentId,ayId);
+    public StudentResponseDTO getStudent(@PathVariable("registerId") Long registerId, @PathVariable("ayId") Long ayId){
+        return studentRegisterService.getStudentByIdAndAcademicYear(registerId,ayId);
     }
+
+    @GetMapping(path = "/students/{studentId}/academicyear/{ayId}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public StudentResponseDTO getStudentByStudentIdAndAcademicYearId(@PathVariable("studentId") Long studentId, @PathVariable("ayId") Long ayId) throws DataNotFoundException {
+        return studentRegisterService.getGradeRegistryByStudentIdAndAcademicYear(studentId,ayId);
+    }
+
+    @PutMapping(path = "/students/register/{registerId}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public StudentResponseDTO updateStudent(@PathVariable("registerId") Long registerId, @RequestBody StudentResponseDTO register) throws DataNotFoundException {
+        return StudentResponseDTO.fromDto(
+                studentRegisterService.updateStudentRegister(registerId,register)
+        );
+    }
+
+
 
 }

@@ -3,10 +3,7 @@ package com.ampla.api.mis.service.impl;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.StudentRequestDTO;
 import com.ampla.api.mis.dto.StudentResponseDTO;
-import com.ampla.api.mis.entities.AcademicYear;
-import com.ampla.api.mis.entities.Grade;
-import com.ampla.api.mis.entities.Student;
-import com.ampla.api.mis.entities.StudentRegister;
+import com.ampla.api.mis.entities.*;
 import com.ampla.api.mis.repository.StudentRegisterRepository;
 import com.ampla.api.mis.service.AcademicYearService;
 import com.ampla.api.mis.service.GradeService;
@@ -78,13 +75,25 @@ public class StudentRegisterServiceImpl implements StudentRegisterService {
     }
 
     @Override
-    public StudentRegister updateStudentRegister(Long id, StudentRequestDTO dto) {
-        StudentRegister register = studentRegisterRepository.getReferenceById(id);
+    public StudentRegister updateStudentRegister(Long registerId,StudentResponseDTO register) throws DataNotFoundException {
+        StudentRegister reg = getStudentRegisterById(registerId);
+        System.out.println(
+                register.getGradeName()
+        );
 
-        if(dto != null){
-//            if(studentRegister.getGrade(). != null)
+        if(register != null){
+            if(register.getGradeName() != null){
+                Grade g = gradeService.getGradeByGradeName(register.getGradeName());
+                reg.setGrade(g);
+            }
+            if(register.getLastSchool() != null){
+                reg.setLastSchool(register.getLastSchool());
+            }
+            if(register.getLastGrade() != null){
+                reg.setLastGrade(register.getLastGrade());
+            }
         }
-        return null;
+        return studentRegisterRepository.save(reg);
     }
 
     @Override
@@ -100,8 +109,16 @@ public class StudentRegisterServiceImpl implements StudentRegisterService {
     }
 
     @Override
-    public StudentResponseDTO getStudentByIdAndAcademicYear(Long studentId, Long academicYearId) {
+    public StudentResponseDTO getGradeRegistryByStudentIdAndAcademicYear(Long studentId, Long academicYearId) throws DataNotFoundException {
+        StudentRegister studentRegister = studentRegisterRepository.findStudentRegisterByStudentIdAndAcademicYearId(studentId,academicYearId)
+                .orElseThrow(()->new DataNotFoundException("Student with Id "+studentId+" not found for academic year "+academicYearId));
 
-        return StudentResponseDTO.fromDto(studentRegisterRepository.findStudentRegisterByStudentIdAndAcademicYearId(studentId,academicYearId));
+        return StudentResponseDTO.fromDto(studentRegister);
+    }
+
+    @Override
+    public StudentResponseDTO getStudentByIdAndAcademicYear(Long registerId, Long academicYearId) {
+
+        return StudentResponseDTO.fromDto(studentRegisterRepository.findStudentRegisterByIdAndAcademicYearId(registerId,academicYearId));
     }
 }

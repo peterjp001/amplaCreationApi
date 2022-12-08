@@ -6,6 +6,7 @@ import com.ampla.api.mis.dto.GradeRegistryRequestDTO;
 import com.ampla.api.mis.dto.GradeRegistryResponseDTO;
 import com.ampla.api.mis.entities.GradeRegistry;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface GradeRegistryService {
@@ -21,7 +22,11 @@ public interface GradeRegistryService {
 
     GradeRegistry updateGradeRegistry(Long id, CourseRegistryRequestDTO gradeRegistry) throws DataNotFoundException;
 
-    GradeRegistry getByCourseNameAndCodeEmployee(String courseName, String codeEmployee);
+    GradeRegistry checkIsGradeRegistryDataExist(String courseName, String codeEmployee, Long academicYearId, LocalTime timeStart, LocalTime timeEnd, String day);
+
+    List<GradeRegistry> getByGradeIdAndAcademicYear(Long gradeId, Long academicYearId);
+
+
 
     void deleteGradeRegistry(Long id);
 

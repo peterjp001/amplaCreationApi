@@ -14,6 +14,8 @@ public class CourseRegistryRequestDTO {
 //    @NotBlank(message = "Required")
     private String courseName;
 
+    private Long academicYearId;
+
 //    @NotBlank(message = "Required")
     private String codeEmployee;
 

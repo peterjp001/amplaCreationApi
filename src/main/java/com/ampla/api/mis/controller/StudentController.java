@@ -1,16 +1,24 @@
 package com.ampla.api.mis.controller;
 
 
+import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.mis.entities.Student;
+import com.ampla.api.mis.service.StudentService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
 public class StudentController {
 //
-//    private final StudentService studentService;
+    private final StudentService studentService;
 //
 //    private final StudentRegisterService studentRegisterService;
 //
-//    public StudentController(StudentService studentService, StudentRegisterService studentRegisterService) {
-//        this.studentService = studentService;
-//        this.studentRegisterService = studentRegisterService;
-//    }
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
 //    @PostMapping(path = "/students")
 //    @PostAuthorize("hasAnyAuthority('USER')")
@@ -18,22 +26,28 @@ public class StudentController {
 //        return studentService.saveStudent(student);
 //    }
 //
-//    @GetMapping(path = "/students")
-//    @PostAuthorize("hasAnyAuthority('USER')")
-//    public List<Student> listStudent(){
-//        return studentService.listStudent();
-//    }
+    @GetMapping(path = "/students")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public List<Student> listStudent(){
+        return studentService.listStudent();
+    }
 //
-//    @GetMapping(path = "/student/{id}")
-//    @PostAuthorize("hasAnyAuthority('USER')")
-//    public Optional<Student> getOne(@PathVariable("id") Long id){
-//        return studentService.getOneStudent(id);
-//    }
+    @GetMapping(path = "/students/{id}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public Student getOneStudent(@PathVariable("id") Long id) throws DataNotFoundException {
+        return studentService.getOneStudent(id);
+    }
+
+    @GetMapping(path = "/students/code/{codeStudent}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public Student getOneStudentByCode(@PathVariable("codeStudent") String codeStudent) throws DataNotFoundException {
+        return studentService.getStudentByCode(codeStudent);
+    }
 //
-//    @GetMapping(path = "/student/register/{id}")
-//    @PostAuthorize("hasAnyAuthority('USER')")
-//    public StudentRegister getOneSR(@PathVariable("id") Long id) throws DataNotFoundException {
-//        return studentRegisterService.getStudentRegisterById(id);
-//    }
+    @PutMapping(path = "/students/{id}")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public Student updateStudent(@PathVariable("id") Long id, @RequestBody Student student) throws DataNotFoundException {
+        return studentService.updateStudent(id,student);
+    }
 
 }
