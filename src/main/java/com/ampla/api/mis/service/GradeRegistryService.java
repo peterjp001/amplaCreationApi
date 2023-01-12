@@ -27,7 +27,6 @@ public interface GradeRegistryService {
     List<GradeRegistry> getByGradeIdAndAcademicYear(Long gradeId, Long academicYearId);
 
 
-
     void deleteGradeRegistry(Long id);
 
 }

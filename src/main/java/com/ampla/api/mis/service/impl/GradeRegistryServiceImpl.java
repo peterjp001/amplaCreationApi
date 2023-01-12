@@ -151,6 +151,8 @@ public class GradeRegistryServiceImpl implements GradeRegistryService {
     }
 
 
+
+
     @Override
     public void deleteGradeRegistry(Long id) {
         registryRepository.deleteById(id);

@@ -18,6 +18,7 @@ public interface GradeRegistryRepository extends JpaRepository<GradeRegistry, Lo
 
 
 
+
 //    @Query(value = "DELETE FROM grade_registry WHERE id = :id ", nativeQuery = true)
 //    void deleteGradeRegistriesByIdNQ(@Param("id") Long id);
 }

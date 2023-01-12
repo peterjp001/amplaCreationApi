@@ -36,6 +36,12 @@ public class GradeRegistryController {
         return gradeRegistryService.getGradeRegistryById(id);
     }
 
+//    @GetMapping(path = "/gradeRegistry/acedemicyear/{ayId}/grade/{id}")
+//    @PostAuthorize("hasAnyAuthority('USER')")
+//    public List<GradeRegistry> getAllByGradeId(@PathVariable("ayId") Long ayId, @PathVariable("gradeId") Long gradeId) throws DataNotFoundException {
+//        return gradeRegistryService.(ayId,gradeId);
+//    }
+
 //    @GetMapping(path = "/gradeRegistry/{courseName}/{codeEmployee}")
 //    @PostAuthorize("hasAnyAuthority('USER')")
 //    public GradeRegistry gradeRegistryByCourseNameAndCodeEmployee(@PathVariable("courseName") String courseName, @PathVariable("codeEmployee") String codeEmployee) throws DataNotFoundException {
