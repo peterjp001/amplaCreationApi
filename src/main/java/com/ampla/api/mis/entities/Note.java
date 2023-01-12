@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Note {
 
     @Id
@@ -18,19 +19,25 @@ public class Note {
     @Column(name = "point")
     private Float point;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "grade_id")
+    private Grade grade;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    public Float getPoint() {
-        return point;
-    }
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
-    public void setPoint(Float point) {
-        this.point = point;
-    }
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id")
+    private AcademicYear academicYear;
+
+
 }

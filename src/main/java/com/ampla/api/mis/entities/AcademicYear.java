@@ -41,5 +41,9 @@ public class AcademicYear implements Serializable {
     @OneToMany(mappedBy = "academicYear")
     private List<StudentRegister> register;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "academicYear")
+    private List<Note> notes;
+
 
 }

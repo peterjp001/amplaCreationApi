@@ -1,6 +1,7 @@
 package com.ampla.api.mis.service;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.mis.dto.RegisterDto;
 import com.ampla.api.mis.dto.StudentRequestDTO;
 import com.ampla.api.mis.dto.StudentResponseDTO;
 import com.ampla.api.mis.entities.GradeRegistry;
@@ -11,6 +12,8 @@ import java.util.List;
 public interface StudentRegisterService {
 
     StudentResponseDTO saveStudentRegister(StudentRequestDTO dto) throws DataNotFoundException;
+
+    StudentResponseDTO saveRegister(RegisterDto dto) throws DataNotFoundException;
 
     List<StudentResponseDTO> listAllStudentRegisterByAY(Long id);
 

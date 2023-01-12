@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -63,6 +64,10 @@ public class Employee implements Serializable {
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     private Collection<Course> course = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private List<Note> notes;
 
 
     public Long getId() {
@@ -159,5 +164,13 @@ public class Employee implements Serializable {
 
     public void setCourse(Collection<Course> course) {
         this.course = course;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 }

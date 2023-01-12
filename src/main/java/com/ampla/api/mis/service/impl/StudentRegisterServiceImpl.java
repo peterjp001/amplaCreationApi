@@ -1,6 +1,7 @@
 package com.ampla.api.mis.service.impl;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.mis.dto.RegisterDto;
 import com.ampla.api.mis.dto.StudentRequestDTO;
 import com.ampla.api.mis.dto.StudentResponseDTO;
 import com.ampla.api.mis.entities.*;
@@ -64,6 +65,25 @@ public class StudentRegisterServiceImpl implements StudentRegisterService {
         register.setLastSchool(dto.getLastSchool());
 
         return  StudentResponseDTO.fromDto(studentRegisterRepository.save(register));
+    }
+
+    @Override
+    public StudentResponseDTO saveRegister(RegisterDto dto) throws DataNotFoundException {
+        StudentRegister register = new StudentRegister();
+
+        Student student = studentService.getOneStudent(dto.getStudentId());
+        register.setStudent(student);
+
+        Grade grade = gradeService.getGradeByGradeName(dto.getGradeName());
+        register.setGrade(grade);
+
+        AcademicYear academicYear = academicYearService.getById(dto.getAcademicYearId());
+        register.setAcademicYear(academicYear);
+
+        register.setLastGrade(dto.getLastGrade());
+        register.setLastSchool(dto.getLastSchool());
+
+        return StudentResponseDTO.fromDto(studentRegisterRepository.save(register));
     }
 
     @Override

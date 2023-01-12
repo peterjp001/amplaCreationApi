@@ -61,4 +61,8 @@ public class Student {
     @OneToMany(mappedBy = "student")
     private List<StudentRegister> studentRegisters;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "student")
+    private List<Note> Notes;
+
 }

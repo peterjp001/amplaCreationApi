@@ -32,4 +32,8 @@ public class Grade implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "grade")
     private List<StudentRegister> register;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "grade")
+    private List<Note> notes;
 }

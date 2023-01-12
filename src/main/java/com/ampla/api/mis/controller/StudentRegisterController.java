@@ -1,6 +1,7 @@
 package com.ampla.api.mis.controller;
 
 import com.ampla.api.exception.DataNotFoundException;
+import com.ampla.api.mis.dto.RegisterDto;
 import com.ampla.api.mis.dto.StudentRequestDTO;
 import com.ampla.api.mis.dto.StudentResponseDTO;
 import com.ampla.api.mis.entities.StudentRegister;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -24,8 +26,14 @@ public class StudentRegisterController {
 
     @PostMapping(path = "/students/register")
     @PostAuthorize("hasAnyAuthority('USER')")
-    public StudentResponseDTO newStudent(@RequestBody StudentRequestDTO dto) throws DataNotFoundException {
+    public StudentResponseDTO newStudent(@Valid @RequestBody StudentRequestDTO dto) throws DataNotFoundException {
         return studentRegisterService.saveStudentRegister(dto);
+    }
+
+    @PostMapping(path = "/students/academic/register")
+    @PostAuthorize("hasAnyAuthority('USER')")
+    public StudentResponseDTO newStudentForAcademicYear(@Valid @RequestBody RegisterDto dto) throws DataNotFoundException {
+        return studentRegisterService.saveRegister(dto);
     }
 
     @GetMapping(path = "/students/register/all/{id}")

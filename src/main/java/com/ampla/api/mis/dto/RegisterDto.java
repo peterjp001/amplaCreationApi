@@ -1,30 +1,31 @@
 package com.ampla.api.mis.dto;
 
-import com.ampla.api.mis.entities.AcademicYear;
-import com.ampla.api.mis.entities.Grade;
-import com.ampla.api.mis.entities.Student;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegisterDto {
 
     private Long registerId;
 
+    @NotNull(message = "required")
+    private Long studentId;
 
+    @NotNull(message = "required")
     private String lastSchool;
 
-
+    @NotNull(message = "required")
     private String lastGrade;
 
+    @NotNull(message = "required")
+    private Long academicYearId;
 
-    private Student student;
-
-
-    private AcademicYear academicYear;
-
-
-    private Grade grade;
+    @NotNull(message = "required")
+    private String gradeName;
 }

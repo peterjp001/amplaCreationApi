@@ -1,11 +1,13 @@
 package com.ampla.api.mis.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +22,10 @@ public class Course implements Serializable {
     @Column(name="course_name")
     @NotBlank(message = "courseName required")
     private String courseName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "course")
+    private List<Note> notes;
 
 
 
@@ -37,5 +43,13 @@ public class Course implements Serializable {
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 }
