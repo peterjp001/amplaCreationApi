@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -82,6 +81,12 @@ public class StudentServiceImpl implements StudentService {
     public Student getOneStudent(Long id) throws DataNotFoundException {
         return studentRepository.findById(id).orElseThrow(
                 ()->new DataNotFoundException("Student With ID "+id+" not exist"));
+    }
+
+    @Override
+    public Student getByFirstNameAndLastName(String firstName, String lastName) throws DataNotFoundException {
+        return studentRepository.findByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(()->new DataNotFoundException("Student '"+firstName+" "+lastName+"' not found"));
     }
 
     @Override

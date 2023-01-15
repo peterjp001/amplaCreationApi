@@ -18,7 +18,9 @@ public interface EmployeeService {
 
     Employee getByPhone(String phone);
 
-    Boolean testPhone(String phone);
+    Employee getByFirstNameAndLastName(String firstName, String lastName) throws DataNotFoundException;
+
+//    Boolean testPhone(String phone);
     Employee saveEmployee(Employee emp) throws DataAlreadyExistException;
 
 //    void linkEmployeeToUser(Long idUser, Long idEmployer) throws DataNotFoundException;

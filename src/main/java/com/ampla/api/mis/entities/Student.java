@@ -2,16 +2,15 @@ package com.ampla.api.mis.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student {
@@ -27,7 +26,7 @@ public class Student {
     private String firstName;
 
     @Column(name = "last_name")
-    private String LastName;
+    private String lastName;
 
     @JsonFormat(pattern = "yyy-MM-dd", shape = JsonFormat.Shape.STRING)
     @Column(name = "date_birth")

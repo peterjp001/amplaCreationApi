@@ -14,5 +14,7 @@ public interface StudentService {
 
     Student getOneStudent(Long id) throws DataNotFoundException;
 
+    Student getByFirstNameAndLastName(String firstName, String lastName) throws DataNotFoundException;
+
     Student getStudentByCode(String codeStudent) throws DataNotFoundException;
 }

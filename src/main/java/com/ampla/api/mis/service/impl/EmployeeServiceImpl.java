@@ -1,7 +1,7 @@
 package com.ampla.api.mis.service.impl;
 
-import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.exception.DataAlreadyExistException;
+import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.EmployeeAsTeacherDTO;
 import com.ampla.api.mis.dto.EmployeeFunctionDTO;
 import com.ampla.api.mis.dto.EmployeeUserDTO;
@@ -23,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -57,11 +55,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Boolean testPhone(String phone) {
-        Pattern pattern = Pattern.compile("^+509");
-        Matcher matcher = pattern.matcher(phone);
-        return  matcher.matches();
+    public Employee getByFirstNameAndLastName(String firstName, String lastName) throws DataNotFoundException {
+        return Optional.of(emplRepo.findByFirstNameAndLastName(firstName, lastName))
+                .orElseThrow(()->new DataNotFoundException("Employee '"+firstName+" "+lastName+"' not found"));
     }
+
+//    @Override
+//    public Boolean testPhone(String phone) {
+//        Pattern pattern = Pattern.compile("^+509");
+//        Matcher matcher = pattern.matcher(phone);
+//        return  matcher.matches();
+//    }
 
 
     @Override
