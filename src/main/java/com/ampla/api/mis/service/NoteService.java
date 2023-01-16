@@ -3,6 +3,7 @@ package com.ampla.api.mis.service;
 import com.ampla.api.exception.DataNotFoundException;
 import com.ampla.api.mis.dto.NoteRequestDTO;
 import com.ampla.api.mis.dto.NoteResponseDTO;
+import com.ampla.api.mis.entities.Note;
 
 import java.io.InputStream;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
 public interface NoteService {
 
     NoteResponseDTO saveNote(NoteRequestDTO note) throws DataNotFoundException;
+
+    Note findExistingNoteWithAllInformations(Long studentId, Long ayId, Long courseId, Long gradeId, Long employeeId);
 
     List<NoteResponseDTO> readNotesFile(InputStream file, Long academicYearId) throws DataNotFoundException;
 

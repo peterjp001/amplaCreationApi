@@ -86,6 +86,12 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public Note findExistingNoteWithAllInformations(Long studentId, Long ayId, Long courseId, Long gradeId, Long employeeId) {
+        return noteRepository.findByStudentIdAndAcademicYearIdAndCourseIdAndGradeIdAndEmployeeId
+                (studentId, ayId, courseId, gradeId, employeeId);
+    }
+
+    @Override
     public List<NoteResponseDTO> readNotesFile(InputStream file, Long academicYearId) throws DataNotFoundException {
 
         List<Note> notes = new ArrayList<>();
@@ -102,12 +108,7 @@ public class NoteServiceImpl implements NoteService {
         String studentFirstName = null;
         Float point = null;
 
-
-
         try {
-
-
-
             // Create Workbook instance holding reference to
             // .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -172,38 +173,40 @@ public class NoteServiceImpl implements NoteService {
                                 point = (float) cell.getNumericCellValue();
                             }
 
-
-
                             if(studentFirstName != null && studentLastname != null && point != null){
-                                System.out.println(studentLastname+" "+studentFirstName);
-                                System.out.println("**************************************");
-                                student = studentService.getByFirstNameAndLastName(studentFirstName,studentLastname);
-                                System.out.println("Academic Year: "+ academicYear.getId());
-                                System.out.println("Professeur: "+employee.getCodeEmployee());
-                                System.out.println("Classe: "+grade.getGradeName());
-                                System.out.println("Cours: "+ course.getCourseName());
-                                System.out.println("Eleve: "+ student.getFirstName()+" "+student.getLastName());
-                                System.out.println("Point: "+ point);
-                                System.out.println("**************************************\n");
+//                                System.out.println(studentLastname+" "+studentFirstName);
+//                                System.out.println("**************************************");
+//                                System.out.println("Academic Year: "+ academicYear.getId());
+//                                System.out.println("Professeur: "+employee.getCodeEmployee());
+//                                System.out.println("Classe: "+grade.getGradeName());
+//                                System.out.println("Cours: "+ course.getCourseName());
+//                                System.out.println("Eleve: "+ student.getFirstName()+" "+student.getLastName());
+//                                System.out.println("Point: "+ point);
+//                                System.out.println("**************************************\n");
 
-                                Note note = new Note();
-                                note.setPoint(point);
-                                note.setGrade(grade);
-                                note.setCourse(course);
-                                note.setStudent(student);
-                                note.setAcademicYear(academicYear);
-                                note.setEmployee(employee);
-                                notes.add(note);
+                                student = studentService.getByFirstNameAndLastName(studentFirstName,studentLastname);
+
+                                Note verifyNote = this.findExistingNoteWithAllInformations
+                                                    (student.getId(),academicYear.getId(), course.getId(), grade.getId(), employee.getId());
+
+                                if(verifyNote == null){
+                                    Note note = new Note();
+                                    note.setPoint(point);
+                                    note.setGrade(grade);
+                                    note.setCourse(course);
+                                    note.setStudent(student);
+                                    note.setAcademicYear(academicYear);
+                                    note.setEmployee(employee);
+                                    notes.add(note);
+                                }else{
+                                    verifyNote.setPoint(point);
+                                    notes.add(verifyNote);
+                                }
 
                             }
-
-
                         }
-
                     }
-
                 }
-
             }
             // Closing file output streams
             file.close();
